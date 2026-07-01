@@ -46,6 +46,7 @@ c++ -std=c++17 -Iinclude src/stats.cpp apps/olympcore_demo.cpp -o /tmp/olympcore
 ## Visual Demo
 
 Open `web/index.html` in a browser. It is a static UI with no server dependency.
+The demo contains interactive examples for the first ported methods and a grouped catalog of the legacy methods still waiting to be ported.
 
 For local HTTP testing:
 

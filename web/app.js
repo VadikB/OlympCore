@@ -9,6 +9,9 @@ const eyebrow = document.querySelector("#eyebrow");
 const viewTitle = document.querySelector("#viewTitle");
 const sampleButton = document.querySelector("#sampleButton");
 const langButtons = document.querySelectorAll(".lang-button");
+const catalogFilter = document.querySelector("#catalogFilter");
+const catalogStats = document.querySelector("#catalogStats");
+const methodCatalog = document.querySelector("#methodCatalog");
 
 const ctx = chart.getContext("2d");
 let activeTab = "summary";
@@ -69,7 +72,29 @@ const i18n = {
     last: "Последнее",
     values: "Значения",
     threshold: "Порог",
-    found: "Найдено"
+    found: "Найдено",
+    catalogEyebrow: "Карта библиотеки",
+    catalogTitle: "Методы OlympCore",
+    filterAll: "Все группы",
+    readyStatus: "готово",
+    portingStatus: "портинг",
+    readyCount: "Интерактивно",
+    portingCount: "К переносу",
+    totalCount: "Всего",
+    sourceLabel: "Источник",
+    groups: {
+      descriptive: "Описательная статистика",
+      distributions: "Распределения",
+      inference: "Статистические тесты",
+      regression: "Регрессия",
+      smoothing: "Сглаживание",
+      timeSeries: "Временные ряды",
+      mle: "Оценка параметров",
+      outliers: "Выбросы",
+      imputation: "Заполнение пропусков",
+      processing: "Обработка данных",
+      utilities: "Утилиты"
+    }
   },
   en: {
     docTitle: "OlympCore Demo",
@@ -109,9 +134,156 @@ const i18n = {
     last: "Last",
     values: "Values",
     threshold: "Threshold",
-    found: "Found"
+    found: "Found",
+    catalogEyebrow: "Library map",
+    catalogTitle: "OlympCore Methods",
+    filterAll: "All groups",
+    readyStatus: "ready",
+    portingStatus: "porting",
+    readyCount: "Interactive",
+    portingCount: "To port",
+    totalCount: "Total",
+    sourceLabel: "Source",
+    groups: {
+      descriptive: "Descriptive statistics",
+      distributions: "Distributions",
+      inference: "Statistical tests",
+      regression: "Regression",
+      smoothing: "Smoothing",
+      timeSeries: "Time series",
+      mle: "Parameter fitting",
+      outliers: "Outliers",
+      imputation: "Imputation",
+      processing: "Data processing",
+      utilities: "Utilities"
+    }
   }
 };
+
+const methodGroups = [
+  {
+    id: "descriptive",
+    methods: [
+      ["Summary statistics", "ready", "count, min, max, mean, median, sample variance and standard deviation.", "количество, минимум, максимум, среднее, медиана, выборочная дисперсия и отклонение.", "web + src/stats.cpp"],
+      ["Average", "porting", "Mean over all values and dimensions.", "среднее по всем значениям и измерениям.", "Stats/Descriptive/average.*"],
+      ["Median", "ready", "Median value for a numeric sample.", "медиана числовой выборки.", "src/stats.cpp"],
+      ["Quantile inclusive", "ready", "Inclusive percentile interpolation.", "инклюзивная интерполяция процентиля.", "src/stats.cpp"],
+      ["Quantile exclusive", "porting", "Exclusive quantile calculation.", "эксклюзивный расчёт квантиля.", "Stats/Descriptive/quantile_exc.*"],
+      ["Percent rank inc/exc", "porting", "Inclusive and exclusive percentile rank.", "инклюзивный и эксклюзивный процентный ранг.", "Stats/Descriptive/percentrank_*"],
+      ["Variance sample/population", "ready", "Sample variance is interactive now; population variance is queued.", "выборочная дисперсия уже интерактивна; генеральная в очереди.", "src/stats.cpp, Stats/Descriptive/var_*"],
+      ["Standard deviation sample/population", "ready", "Sample standard deviation is interactive now; population version is queued.", "выборочное стандартное отклонение уже интерактивно; генеральное в очереди.", "src/stats.cpp, Stats/Descriptive/stdev_*"],
+      ["Covariance and Pearson", "porting", "Covariance, population covariance, Pearson correlation.", "ковариация, ковариация генеральной совокупности, корреляция Пирсона.", "Stats/Descriptive/cov*, pearson.*"],
+      ["Skew, kurtosis, moments", "porting", "Shape metrics and raw/central moments.", "метрики формы распределения и начальные/центральные моменты.", "Stats/Descriptive/skew.*, kurt.*, moment*"],
+      ["Rank average/equal", "porting", "Ranking with average or equal-rank handling.", "ранжирование со средними или равными рангами.", "Stats/Descriptive/rank_*"],
+      ["Large, small, range", "porting", "Order statistics and numeric range.", "порядковые статистики и размах.", "Stats/Descriptive/large.*, small.*, range.*"],
+      ["ANOVA", "porting", "Single-factor, two-factor and repeated ANOVA.", "однофакторный, двухфакторный и повторный ANOVA.", "Stats/Descriptive/anova_*"],
+      ["Crosstabulate numbers", "porting", "Numeric crosstabulation.", "числовая перекрёстная таблица.", "Stats/Descriptive/crosstabulate_numbers.*"],
+      ["AveDev, DevSq, Geo/Harmonic mean", "porting", "Average deviation, sum of square deviations, geometric and harmonic means.", "среднее отклонение, сумма квадратов отклонений, геометрическое и гармоническое среднее.", "Stats/Descriptive/avedev.*, devsq.*, geoharmean.*"]
+    ]
+  },
+  {
+    id: "distributions",
+    methods: [
+      ["Normal distribution", "ready", "Normal PDF, CDF and inverse CDF.", "нормальные PDF, CDF и обратная CDF.", "src/stats.cpp, Stats/dist/norm.*"],
+      ["Beta", "porting", "Beta distribution and random sampling.", "бета-распределение и генерация выборок.", "Stats/dist/beta*"],
+      ["Binomial", "porting", "Binomial distribution and random sampling.", "биномиальное распределение и генерация выборок.", "Stats/dist/binom*"],
+      ["Bernoulli", "porting", "Bernoulli distribution and random sampling.", "распределение Бернулли и генерация выборок.", "Stats/dist/bernoulli*"],
+      ["Cauchy", "porting", "Cauchy distribution and random sampling.", "распределение Коши и генерация выборок.", "Stats/dist/cauchy*"],
+      ["Chi-square", "porting", "Chi-square distribution and random sampling.", "хи-квадрат распределение и генерация выборок.", "Stats/dist/chisq*"],
+      ["Exponential", "porting", "Exponential distribution and random sampling.", "экспоненциальное распределение и генерация выборок.", "Stats/dist/expon*"],
+      ["F and Fisher", "porting", "F-family distribution helpers.", "семейство F-распределений.", "Stats/dist/f*, fisher.*"],
+      ["Gamma", "porting", "Gamma distribution and random sampling.", "гамма-распределение и генерация выборок.", "Stats/dist/gamma*"],
+      ["Geometric", "porting", "Geometric distribution and random sampling.", "геометрическое распределение и генерация выборок.", "Stats/dist/geometric*"],
+      ["GEV, Gumbel, Rayleigh", "porting", "Extreme value and Rayleigh distributions.", "распределения экстремальных значений и Рэлея.", "Stats/dist/gev.*, gumbel.*, rayleigh*"],
+      ["Hypergeometric", "porting", "Hypergeometric distribution and random sampling.", "гипергеометрическое распределение и генерация выборок.", "Stats/dist/hypgeom*"],
+      ["Laplace, Logistic, Lognormal", "porting", "Laplace, logistic and lognormal distributions.", "распределения Лапласа, логистическое и логнормальное.", "Stats/dist/laplace.*, logistic.*, lognorm*"],
+      ["Negative binomial, Pareto, Poisson", "porting", "Discrete and heavy-tail distributions.", "дискретные распределения и распределения с тяжёлым хвостом.", "Stats/dist/negbinom*, pareto*, poisson*"],
+      ["Student t, Uniform, Weibull", "porting", "T, uniform and Weibull distributions.", "t-распределение, равномерное и Вейбулла.", "Stats/dist/t.*, uniform*, weibull*"]
+    ]
+  },
+  {
+    id: "inference",
+    methods: [
+      ["Z-test", "porting", "Z hypothesis test.", "Z-критерий.", "Stats/Inference/z_test.*"],
+      ["T-test", "porting", "Student t-test.", "t-критерий Стьюдента.", "Stats/Inference/t_test.*"],
+      ["Chi-square test", "porting", "Chi-square hypothesis test.", "критерий хи-квадрат.", "Stats/Inference/chisq_test.*"],
+      ["Fisher exact test", "porting", "Fisher exact test.", "точный критерий Фишера.", "Stats/Inference/fisher_test.*"],
+      ["Kolmogorov-Smirnov", "porting", "One-sample and two-sample KS tests.", "одновыборочный и двухвыборочный критерии Колмогорова-Смирнова.", "Stats/Inference/ks*_test.*"],
+      ["Mann-Whitney", "porting", "Mann-Whitney U test.", "критерий Манна-Уитни.", "Stats/Inference/mw_test.*"],
+      ["Wilcoxon signed-rank", "porting", "Wilcoxon signed-rank test.", "знаково-ранговый критерий Уилкоксона.", "Stats/Inference/wsr_test.*"]
+    ]
+  },
+  {
+    id: "regression",
+    methods: [
+      ["Linear regression", "ready", "Slope, intercept and R squared are interactive.", "наклон, сдвиг и R квадрат уже интерактивны.", "src/stats.cpp"],
+      ["Slope", "porting", "Legacy slope operator.", "старый оператор наклона.", "Stats/Regression/slope.*"],
+      ["Intercept", "porting", "Legacy intercept operator.", "старый оператор свободного члена.", "Stats/Regression/intercept.*"],
+      ["Forecast", "porting", "Linear forecast from known X/Y values.", "линейный прогноз по известным X/Y.", "Stats/Regression/forecast.*"],
+      ["STEYX", "porting", "Standard error of predicted Y.", "стандартная ошибка предсказанного Y.", "Stats/Regression/steyx.*"],
+      ["Naive Bayes", "porting", "Classification helper.", "вспомогательный классификатор.", "Stats/Regression/naive_bayes.cpp"]
+    ]
+  },
+  {
+    id: "smoothing",
+    methods: [
+      ["Simple moving average", "ready", "Interactive rolling average by window.", "интерактивное скользящее среднее по окну.", "src/stats.cpp"],
+      ["Cumulative moving average", "porting", "Cumulative average over time.", "накопительное среднее по времени.", "Stats/Smoothing/moving_average_cumulative.*"],
+      ["Weighted moving average", "porting", "Weighted rolling average.", "взвешенное скользящее среднее.", "Stats/Smoothing/moving_average_weighted.*"],
+      ["Triangular moving average", "porting", "Triangular smoothing window.", "треугольное сглаживающее окно.", "Stats/Smoothing/moving_average_triangular.*"],
+      ["Exponential moving average", "porting", "EMA smoothing.", "экспоненциальное скользящее среднее.", "Stats/Smoothing/moving_average_exponential.*"]
+    ]
+  },
+  {
+    id: "timeSeries",
+    methods: [
+      ["ADF test", "porting", "Augmented Dickey-Fuller stationarity test.", "расширенный тест Дики-Фуллера на стационарность.", "Stats/TimeSeries/adf_test.*"],
+      ["Autocorrelation ACF", "porting", "Autocorrelation function.", "автокорреляционная функция.", "Stats/TimeSeries/timeseries_acf.cpp"],
+      ["Partial autocorrelation PACF", "porting", "Partial autocorrelation function.", "частная автокорреляция.", "Stats/TimeSeries/timeseries_pacf.cpp"],
+      ["Autoregression AR", "porting", "Autoregressive model helpers.", "вспомогательные функции авторегрессии.", "Stats/TimeSeries/timeseries_ar.*"],
+      ["AIC/BIC", "porting", "Information criteria helpers.", "информационные критерии.", "Stats/TimeSeries/timeseries_aicbic.cpp"],
+      ["Time series forecast", "porting", "Forecast helpers for time series.", "прогнозирование временных рядов.", "Stats/TimeSeries/time_series_forecast.cpp"]
+    ]
+  },
+  {
+    id: "mle",
+    methods: [
+      ["Normal fit", "porting", "Maximum-likelihood normal fit.", "MLE-подгонка нормального распределения.", "Stats/MLE/norm_fit.*"],
+      ["Exponential fit", "porting", "Maximum-likelihood exponential fit.", "MLE-подгонка экспоненциального распределения.", "Stats/MLE/expon_fit.*"],
+      ["Poisson fit", "porting", "Maximum-likelihood Poisson fit.", "MLE-подгонка распределения Пуассона.", "Stats/MLE/poisson_fit.*"],
+      ["Binomial fit", "porting", "Maximum-likelihood binomial fit.", "MLE-подгонка биномиального распределения.", "Stats/MLE/binom_fit.*"]
+    ]
+  },
+  {
+    id: "outliers",
+    methods: [
+      ["Z-score outliers", "ready", "Interactive outlier detection by z-score threshold.", "интерактивный поиск выбросов по z-score.", "src/stats.cpp"],
+      ["ESD", "porting", "Extreme studentized deviate test.", "критерий экстремального студентизированного отклонения.", "Stats/Outliers/esd.*"],
+      ["Dixon Q", "porting", "Dixon Q outlier test.", "Q-критерий Диксона для выбросов.", "Stats/Outliers/dq_test.*"]
+    ]
+  },
+  {
+    id: "imputation",
+    methods: [
+      ["Mean imputation", "porting", "Fill missing values with means.", "заполнение пропусков средними.", "Stats/Imputation/imputation_mean.*"],
+      ["Match imputation", "porting", "Match-based imputation.", "заполнение пропусков по совпадениям.", "Stats/Imputation/imputation_match.cpp"],
+      ["LVCF", "porting", "Last value carried forward.", "перенос последнего известного значения вперёд.", "Stats/Imputation/lvcf.*"]
+    ]
+  },
+  {
+    id: "processing",
+    methods: [
+      ["Standardize", "porting", "Data standardization.", "стандартизация данных.", "Stats/DataProcessing/standardize.cpp"]
+    ]
+  },
+  {
+    id: "utilities",
+    methods: [
+      ["Random permutation", "porting", "Random permutation utility.", "утилита случайной перестановки.", "Stats/Utilities/rand_perm.*"],
+      ["RNG helpers", "porting", "Random generation utilities.", "вспомогательные функции генерации случайных чисел.", "Stats/dist/TCRNGUtils.*"]
+    ]
+  }
+];
 
 const titleKeys = {
   summary: ["summaryEyebrow", "summaryTitle"],
@@ -123,6 +295,62 @@ const titleKeys = {
 
 function t(key) {
   return i18n[currentLang][key] || i18n.en[key] || key;
+}
+
+function groupTitle(groupId) {
+  return i18n[currentLang].groups[groupId] || i18n.en.groups[groupId] || groupId;
+}
+
+function allMethods() {
+  return methodGroups.flatMap((group) => group.methods.map((method) => ({
+    group: group.id,
+    name: method[0],
+    status: method[1],
+    description: currentLang === "ru" ? method[3] : method[2],
+    source: method[4]
+  })));
+}
+
+function renderCatalogOptions() {
+  const selected = catalogFilter.value || "all";
+  catalogFilter.innerHTML = [
+    `<option value="all">${t("filterAll")}</option>`,
+    ...methodGroups.map((group) => `<option value="${group.id}">${groupTitle(group.id)}</option>`)
+  ].join("");
+  catalogFilter.value = [...catalogFilter.options].some((option) => option.value === selected) ? selected : "all";
+  catalogFilter.setAttribute("aria-label", t("catalogTitle"));
+}
+
+function renderCatalog() {
+  renderCatalogOptions();
+  const selectedGroup = catalogFilter.value || "all";
+  const methods = allMethods();
+  const visible = selectedGroup === "all" ? methods : methods.filter((method) => method.group === selectedGroup);
+  const ready = methods.filter((method) => method.status === "ready").length;
+  const porting = methods.length - ready;
+
+  catalogStats.innerHTML = [
+    [t("readyCount"), ready],
+    [t("portingCount"), porting],
+    [t("totalCount"), methods.length]
+  ].map(([label, value]) => (
+    `<div class="catalog-stat"><span>${label}</span><strong>${value}</strong></div>`
+  )).join("");
+
+  methodCatalog.innerHTML = visible.map((method) => {
+    const statusClass = method.status === "ready" ? "status-ready" : "status-porting";
+    const statusText = method.status === "ready" ? t("readyStatus") : t("portingStatus");
+    return `
+      <article class="method-card">
+        <header>
+          <h4>${method.name}</h4>
+          <span class="status ${statusClass}">${statusText}</span>
+        </header>
+        <p>${groupTitle(method.group)}. ${method.description}</p>
+        <code>${t("sourceLabel")}: ${method.source}</code>
+      </article>
+    `;
+  }).join("");
 }
 
 function parseNumbers(text) {
@@ -251,6 +479,7 @@ function applyLanguage() {
   langButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.lang === currentLang);
   });
+  renderCatalog();
 }
 
 function setMetrics(items) {
@@ -486,6 +715,8 @@ langButtons.forEach((button) => {
 [dataInput, xInput, windowInput, thresholdInput].forEach((input) => {
   input.addEventListener("input", render);
 });
+
+catalogFilter.addEventListener("change", renderCatalog);
 
 sampleButton.addEventListener("click", () => {
   sampleIndex = (sampleIndex + 1) % samples.length;
