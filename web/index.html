@@ -17,48 +17,53 @@
         </div>
       </div>
 
+      <div class="language-toggle" aria-label="Language">
+        <button class="lang-button active" data-lang="ru" type="button">RU</button>
+        <button class="lang-button" data-lang="en" type="button">EN</button>
+      </div>
+
       <label class="field">
-        <span data-i18n="dataLabel">Данные</span>
-        <textarea id="dataInput" spellcheck="false">10, 11, 12, 14, 15, 18, 21, 22, 26, 30</textarea>
+        <span data-i18n="searchLabel">Поиск метода</span>
+        <input id="methodSearch" type="search" autocomplete="off">
       </label>
 
       <label class="field">
-        <span data-i18n="xLabel">Значения X</span>
-        <input id="xInput" value="1, 2, 3, 4, 5, 6, 7, 8, 9, 10">
+        <span data-i18n="groupLabel">Группа</span>
+        <select id="groupFilter"></select>
       </label>
 
       <label class="field">
-        <span data-i18n="windowLabel">Окно</span>
-        <input id="windowInput" type="number" min="1" value="3">
+        <span data-i18n="statusLabel">Статус</span>
+        <select id="statusFilter"></select>
       </label>
 
-      <label class="field">
-        <span data-i18n="thresholdLabel">Порог выбросов</span>
-        <input id="thresholdInput" type="number" min="0.1" step="0.1" value="2">
-      </label>
+      <div id="catalogStats" class="catalog-stats"></div>
+      <nav id="methodList" class="method-list" aria-label="Методы"></nav>
     </aside>
 
     <section class="workspace">
-      <nav class="tabs" aria-label="Methods">
-        <button class="tab active" data-tab="summary" title="Summary">Sigma</button>
-        <button class="tab" data-tab="regression" title="Regression">Line</button>
-        <button class="tab" data-tab="normal" title="Normal distribution">Bell</button>
-        <button class="tab" data-tab="smoothing" title="Smoothing">Avg</button>
-        <button class="tab" data-tab="outliers" title="Outliers">Z</button>
-        <div class="language-toggle" aria-label="Language">
-          <button class="lang-button active" data-lang="ru" type="button">RU</button>
-          <button class="lang-button" data-lang="en" type="button">EN</button>
-        </div>
-      </nav>
-
       <section class="stage">
         <div class="stage-head">
           <div>
-            <p id="eyebrow">Сводка</p>
-            <h2 id="viewTitle">Описательная статистика</h2>
+            <p id="methodGroupLabel">Сводка</p>
+            <h2 id="methodTitle">Описательная статистика</h2>
           </div>
-          <button id="sampleButton" class="icon-button" title="Загрузить пример">↻</button>
+          <span id="methodStatus" class="status status-ready">готово</span>
         </div>
+
+        <p id="methodDescription" class="method-description"></p>
+
+        <section class="method-panel" aria-labelledby="methodTitle">
+          <div class="panel-head">
+            <h3 data-i18n="parametersTitle">Параметры</h3>
+            <button id="sampleButton" class="icon-button" title="Загрузить пример">↻</button>
+          </div>
+          <div id="inputPanel" class="input-grid"></div>
+          <div class="panel-actions">
+            <button id="runButton" class="primary-button" type="button" data-i18n="runMethod">Выполнить</button>
+            <span id="methodNote" class="method-note"></span>
+          </div>
+        </section>
 
         <canvas id="chart" width="1200" height="520" aria-label="График"></canvas>
 
@@ -73,13 +78,15 @@
             </div>
             <select id="catalogFilter" aria-label="Фильтр методов"></select>
           </div>
-          <div id="catalogStats" class="catalog-stats"></div>
           <div id="methodCatalog" class="method-grid"></div>
         </section>
       </section>
     </section>
   </main>
 
+  <script src="methods.js"></script>
+  <script src="calculators.js"></script>
+  <script src="panels.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

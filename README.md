@@ -47,6 +47,12 @@ c++ -std=c++17 -Iinclude src/stats.cpp apps/olympcore_demo.cpp -o /tmp/olympcore
 
 Open `web/index.html` in a browser. It is a static UI with no server dependency.
 The demo contains interactive examples for the first ported methods and a grouped catalog of the legacy methods still waiting to be ported.
+The web UI is organized as a method presentation system:
+
+- `web/methods.js` describes methods, groups, statuses, sources, sample inputs, and input schemas.
+- `web/panels.js` renders parameter panels from method schemas.
+- `web/calculators.js` contains browser-side calculators for already ported methods.
+- `web/app.js` connects navigation, language switching, calculation, charts, and JSON output.
 
 For local HTTP testing:
 
