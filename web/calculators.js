@@ -33,6 +33,69 @@ window.OlympCoreCalculators = (() => {
     return sorted[lower] + (sorted[upper] - sorted[lower]) * (rank - lower);
   }
 
+  function percentileExc(values, percentile) {
+    const sorted = [...values].sort((a, b) => a - b);
+    const rank = percentile * (sorted.length + 1);
+    if (rank <= 1 || rank >= sorted.length) throw new Error("Percentile is outside exclusive range");
+    const lower = Math.floor(rank) - 1;
+    return sorted[lower] + (sorted[lower + 1] - sorted[lower]) * (rank - Math.floor(rank));
+  }
+
+  function variancePopulation(values) {
+    const avg = mean(values);
+    return values.reduce((sum, value) => sum + (value - avg) ** 2, 0) / values.length;
+  }
+
+  function covarianceSample(xs, ys) {
+    const n = Math.min(xs.length, ys.length);
+    const xSeries = xs.slice(0, n);
+    const ySeries = ys.slice(0, n);
+    const xMean = mean(xSeries);
+    const yMean = mean(ySeries);
+    return xSeries.reduce((sum, x, index) => sum + (x - xMean) * (ySeries[index] - yMean), 0) / (n - 1);
+  }
+
+  function pearsonCorrelation(xs, ys) {
+    return covarianceSample(xs, ys) / (Math.sqrt(varianceSample(xs)) * Math.sqrt(varianceSample(ys)));
+  }
+
+  function skewnessSample(values) {
+    const avg = mean(values);
+    const sd = Math.sqrt(varianceSample(values));
+    const n = values.length;
+    const sum3 = values.reduce((sum, value) => sum + ((value - avg) / sd) ** 3, 0);
+    return (n / ((n - 1) * (n - 2))) * sum3;
+  }
+
+  function kurtosisExcessSample(values) {
+    const avg = mean(values);
+    const sd = Math.sqrt(varianceSample(values));
+    const n = values.length;
+    const sum4 = values.reduce((sum, value) => sum + ((value - avg) / sd) ** 4, 0);
+    return (n * (n + 1) * sum4 / ((n - 1) * (n - 2) * (n - 3)))
+      - (3 * (n - 1) ** 2 / ((n - 2) * (n - 3)));
+  }
+
+  function rankAverage(values) {
+    const indexed = values.map((value, index) => ({ value, index })).sort((a, b) => a.value - b.value);
+    const ranks = Array(values.length);
+    let i = 0;
+    while (i < indexed.length) {
+      let j = i + 1;
+      while (j < indexed.length && indexed[j].value === indexed[i].value) j += 1;
+      const rank = ((i + 1) + j) / 2;
+      for (let k = i; k < j; k += 1) ranks[indexed[k].index] = rank;
+      i = j;
+    }
+    return ranks;
+  }
+
+  function standardize(values) {
+    const avg = mean(values);
+    const sd = Math.sqrt(varianceSample(values));
+    return values.map((value) => (value - avg) / sd);
+  }
+
   function regression(xs, ys) {
     const xMean = mean(xs);
     const yMean = mean(ys);
@@ -85,6 +148,23 @@ window.OlympCoreCalculators = (() => {
     return result;
   }
 
+  function movingAverageCumulative(values) {
+    let running = 0;
+    return values.map((value, index) => {
+      running += value;
+      return running / (index + 1);
+    });
+  }
+
+  function movingAverageExponential(values, alpha) {
+    if (alpha <= 0 || alpha > 1) throw new Error("Alpha must be in (0, 1]");
+    const result = [values[0]];
+    for (let i = 1; i < values.length; i += 1) {
+      result.push(alpha * values[i] + (1 - alpha) * result[i - 1]);
+    }
+    return result;
+  }
+
   function zScoreOutliers(values, threshold) {
     const avg = mean(values);
     const stdev = Math.sqrt(varianceSample(values));
@@ -121,12 +201,90 @@ window.OlympCoreCalculators = (() => {
       return metricOnly({ percentile: percentileInc(series, percentile) }, series, { percentile, value: percentileInc(series, percentile) });
     }
 
+    if (methodId === "quantile_exc") {
+      const percentile = Number(values.percentile);
+      return metricOnly({ percentile: percentileExc(series, percentile) }, series, { percentile, value: percentileExc(series, percentile) });
+    }
+
+    if (methodId === "percentrank") {
+      const x = Number(values.x);
+      const sorted = [...series].sort((a, b) => a - b);
+      const below = sorted.filter((value) => value < x).length;
+      const equal = sorted.filter((value) => value === x).length;
+      const rawRank = equal ? (below + (equal - 1) / 2) / (sorted.length - 1) : below / (sorted.length - 1);
+      const rank = Math.max(0, Math.min(1, rawRank));
+      return metricOnly({ percentile: rank }, series, { x, percent_rank: rank });
+    }
+
     if (methodId === "variance") {
-      return metricOnly({ variance: varianceSample(series) }, series);
+      return metricOnly({ variance: varianceSample(series), populationVariance: variancePopulation(series) }, series, {
+        variance_sample: varianceSample(series),
+        variance_population: variancePopulation(series)
+      });
     }
 
     if (methodId === "stdev") {
-      return metricOnly({ stdev: Math.sqrt(varianceSample(series)) }, series);
+      return metricOnly({ stdev: Math.sqrt(varianceSample(series)), populationStdev: Math.sqrt(variancePopulation(series)) }, series, {
+        stdev_sample: Math.sqrt(varianceSample(series)),
+        stdev_population: Math.sqrt(variancePopulation(series))
+      });
+    }
+
+    if (methodId === "cov_pearson") {
+      const n = Math.min(xs.length, ys.length);
+      const xSeries = xs.slice(0, n);
+      const ySeries = ys.slice(0, n);
+      return {
+        metrics: { covariance: covarianceSample(xSeries, ySeries), pearson: pearsonCorrelation(xSeries, ySeries), points: n },
+        json: { covariance_sample: covarianceSample(xSeries, ySeries), pearson: pearsonCorrelation(xSeries, ySeries), points: n },
+        chart: { type: "regression", xs: xSeries, ys: ySeries, result: regression(xSeries, ySeries) }
+      };
+    }
+
+    if (methodId === "moments") {
+      const avg = mean(series);
+      const central2 = series.reduce((sum, value) => sum + (value - avg) ** 2, 0) / series.length;
+      const central3 = series.reduce((sum, value) => sum + (value - avg) ** 3, 0) / series.length;
+      return metricOnly({ skewness: skewnessSample(series), kurtosis: kurtosisExcessSample(series), moment2: central2, moment3: central3 }, series, {
+        skewness_sample: skewnessSample(series),
+        kurtosis_excess_sample: kurtosisExcessSample(series),
+        central_moment_2: central2,
+        central_moment_3: central3
+      });
+    }
+
+    if (methodId === "rank") {
+      const ranks = rankAverage(series);
+      return { metrics: { min: Math.min(...ranks), max: Math.max(...ranks), values: ranks.length }, json: ranks, chart: { type: "bars", values: ranks } };
+    }
+
+    if (methodId === "order_stats") {
+      const k = Math.max(1, Math.min(Math.round(Number(values.x)), series.length));
+      const sorted = [...series].sort((a, b) => a - b);
+      return metricOnly({ min: sorted[0], max: sorted[sorted.length - 1], range: sorted[sorted.length - 1] - sorted[0], kthSmall: sorted[k - 1], kthLarge: sorted[sorted.length - k] }, series, {
+        min: sorted[0],
+        max: sorted[sorted.length - 1],
+        range: sorted[sorted.length - 1] - sorted[0],
+        kth_small: sorted[k - 1],
+        kth_large: sorted[sorted.length - k]
+      });
+    }
+
+    if (methodId === "deviation_means") {
+      const avg = mean(series);
+      const aveDev = mean(series.map((value) => Math.abs(value - avg)));
+      const devSq = series.reduce((sum, value) => sum + (value - avg) ** 2, 0);
+      if (series.some((value) => value <= 0)) {
+        throw new Error("Geometric and harmonic means require positive values");
+      }
+      const geo = Math.exp(mean(series.map((value) => Math.log(value))));
+      const harmonic = series.length / series.reduce((sum, value) => sum + 1 / value, 0);
+      return metricOnly({ averageDeviation: aveDev, devsq: devSq, geometricMean: geo, harmonicMean: harmonic }, series, {
+        average_deviation: aveDev,
+        devsq: devSq,
+        geometric_mean: geo,
+        harmonic_mean: harmonic
+      });
     }
 
     if (methodId === "linear_regression") {
@@ -137,6 +295,34 @@ window.OlympCoreCalculators = (() => {
       return {
         metrics: { slope: result.slope, intercept: result.intercept, rSquared: result.r_squared, points: n },
         json: result,
+        chart: { type: "regression", xs: xSeries, ys: ySeries, result }
+      };
+    }
+
+    if (["slope", "intercept", "forecast", "steyx"].includes(methodId)) {
+      const n = Math.min(xs.length, ys.length);
+      const xSeries = xs.slice(0, n);
+      const ySeries = ys.slice(0, n);
+      const result = regression(xSeries, ySeries);
+      const residuals = xSeries.map((x, index) => ySeries[index] - (result.slope * x + result.intercept));
+      const steyx = Math.sqrt(residuals.reduce((sum, value) => sum + value * value, 0) / (n - 2));
+      const forecastX = methodId === "forecast" ? Number(values.x) : null;
+      const forecast = forecastX == null ? null : result.slope * forecastX + result.intercept;
+      const metricMap = {
+        slope: { slope: result.slope },
+        intercept: { intercept: result.intercept },
+        forecast: { forecast },
+        steyx: { steyx }
+      };
+      return {
+        metrics: { ...metricMap[methodId], points: n },
+        json: {
+          slope: result.slope,
+          intercept: result.intercept,
+          ...(forecastX == null ? {} : { forecast_x: forecastX, forecast }),
+          steyx,
+          r_squared: result.r_squared
+        },
         chart: { type: "regression", xs: xSeries, ys: ySeries, result }
       };
     }
@@ -162,6 +348,22 @@ window.OlympCoreCalculators = (() => {
         json: smoothed,
         chart: { type: "smoothing", values: series, smoothed, windowSize }
       };
+    }
+
+    if (methodId === "cumulative_moving_average") {
+      const smoothed = movingAverageCumulative(series);
+      return { metrics: { first: smoothed[0], last: smoothed[smoothed.length - 1], values: smoothed.length }, json: smoothed, chart: { type: "smoothing", values: series, smoothed, windowSize: 1 } };
+    }
+
+    if (methodId === "exponential_moving_average") {
+      const alpha = Number(values.alpha);
+      const smoothed = movingAverageExponential(series, alpha);
+      return { metrics: { alpha, first: smoothed[0], last: smoothed[smoothed.length - 1], values: smoothed.length }, json: smoothed, chart: { type: "smoothing", values: series, smoothed, windowSize: 1 } };
+    }
+
+    if (methodId === "standardize") {
+      const result = standardize(series);
+      return { metrics: { mean: mean(result), stdev: Math.sqrt(varianceSample(result)), values: result.length }, json: result, chart: { type: "bars", values: result } };
     }
 
     if (methodId === "z_score_outliers") {

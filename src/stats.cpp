@@ -72,9 +72,26 @@ double variance_sample(const std::vector<double>& values)
     return sum / static_cast<double>(values.size() - 1);
 }
 
+double variance_population(const std::vector<double>& values)
+{
+    require_non_empty(values, "values");
+    const double avg = mean(values);
+    double sum = 0.0;
+    for (double value : values) {
+        const double delta = value - avg;
+        sum += delta * delta;
+    }
+    return sum / static_cast<double>(values.size());
+}
+
 double stdev_sample(const std::vector<double>& values)
 {
     return std::sqrt(variance_sample(values));
+}
+
+double stdev_population(const std::vector<double>& values)
+{
+    return std::sqrt(variance_population(values));
 }
 
 double percentile_inc(std::vector<double> values, double percentile)
@@ -95,6 +112,134 @@ double percentile_inc(std::vector<double> values, double percentile)
     const auto upper = static_cast<std::size_t>(std::ceil(rank));
     const double fraction = rank - static_cast<double>(lower);
     return values[lower] + (values[upper] - values[lower]) * fraction;
+}
+
+double percentile_exc(std::vector<double> values, double percentile)
+{
+    require_non_empty(values, "values");
+    require_finite(percentile, "percentile");
+    if (percentile <= 0.0 || percentile >= 1.0) {
+        throw std::invalid_argument("percentile must be in (0, 1)");
+    }
+
+    std::sort(values.begin(), values.end());
+    const double rank = percentile * static_cast<double>(values.size() + 1);
+    if (rank <= 1.0 || rank >= static_cast<double>(values.size())) {
+        throw std::invalid_argument("percentile is outside the exclusive range for this sample");
+    }
+    const auto lower = static_cast<std::size_t>(std::floor(rank)) - 1;
+    const double fraction = rank - std::floor(rank);
+    return values[lower] + (values[lower + 1] - values[lower]) * fraction;
+}
+
+double covariance_sample(const std::vector<double>& xs, const std::vector<double>& ys)
+{
+    if (xs.size() != ys.size()) {
+        throw std::invalid_argument("xs and ys must have the same length");
+    }
+    if (xs.size() < 2) {
+        throw std::invalid_argument("covariance requires at least two points");
+    }
+
+    const double x_mean = mean(xs);
+    const double y_mean = mean(ys);
+    double sum = 0.0;
+    for (std::size_t i = 0; i < xs.size(); ++i) {
+        sum += (xs[i] - x_mean) * (ys[i] - y_mean);
+    }
+    return sum / static_cast<double>(xs.size() - 1);
+}
+
+double pearson_correlation(const std::vector<double>& xs, const std::vector<double>& ys)
+{
+    const double cov = covariance_sample(xs, ys);
+    const double denom = stdev_sample(xs) * stdev_sample(ys);
+    if (denom == 0.0) {
+        throw std::invalid_argument("both samples must have non-zero variance");
+    }
+    return cov / denom;
+}
+
+double skewness_sample(const std::vector<double>& values)
+{
+    if (values.size() < 3) {
+        throw std::invalid_argument("skewness requires at least three values");
+    }
+    const double avg = mean(values);
+    const double sd = stdev_sample(values);
+    if (sd == 0.0) {
+        throw std::invalid_argument("values must have non-zero variance");
+    }
+
+    double sum3 = 0.0;
+    for (double value : values) {
+        sum3 += std::pow((value - avg) / sd, 3.0);
+    }
+    const double n = static_cast<double>(values.size());
+    return (n / ((n - 1.0) * (n - 2.0))) * sum3;
+}
+
+double kurtosis_excess_sample(const std::vector<double>& values)
+{
+    if (values.size() < 4) {
+        throw std::invalid_argument("kurtosis requires at least four values");
+    }
+    const double avg = mean(values);
+    const double sd = stdev_sample(values);
+    if (sd == 0.0) {
+        throw std::invalid_argument("values must have non-zero variance");
+    }
+
+    double sum4 = 0.0;
+    for (double value : values) {
+        sum4 += std::pow((value - avg) / sd, 4.0);
+    }
+    const double n = static_cast<double>(values.size());
+    return (n * (n + 1.0) * sum4 / ((n - 1.0) * (n - 2.0) * (n - 3.0)))
+        - (3.0 * (n - 1.0) * (n - 1.0) / ((n - 2.0) * (n - 3.0)));
+}
+
+std::vector<double> rank_average(const std::vector<double>& values)
+{
+    require_non_empty(values, "values");
+    std::vector<std::pair<double, std::size_t>> indexed;
+    indexed.reserve(values.size());
+    for (std::size_t i = 0; i < values.size(); ++i) {
+        indexed.push_back({values[i], i});
+    }
+    std::sort(indexed.begin(), indexed.end());
+
+    std::vector<double> ranks(values.size());
+    std::size_t i = 0;
+    while (i < indexed.size()) {
+        std::size_t j = i + 1;
+        while (j < indexed.size() && indexed[j].first == indexed[i].first) {
+            ++j;
+        }
+        const double rank = (static_cast<double>(i + 1) + static_cast<double>(j)) / 2.0;
+        for (std::size_t k = i; k < j; ++k) {
+            ranks[indexed[k].second] = rank;
+        }
+        i = j;
+    }
+    return ranks;
+}
+
+std::vector<double> standardize(const std::vector<double>& values)
+{
+    require_non_empty(values, "values");
+    const double avg = mean(values);
+    const double sd = stdev_sample(values);
+    if (sd == 0.0) {
+        throw std::invalid_argument("values must have non-zero variance");
+    }
+
+    std::vector<double> result;
+    result.reserve(values.size());
+    for (double value : values) {
+        result.push_back((value - avg) / sd);
+    }
+    return result;
 }
 
 Summary summarize(std::vector<double> values)
@@ -145,6 +290,31 @@ RegressionResult linear_regression(const std::vector<double>& xs, const std::vec
     result.intercept = y_mean - result.slope * x_mean;
     result.r_squared = ss_yy == 0.0 ? 1.0 : (ss_xy * ss_xy) / (ss_xx * ss_yy);
     return result;
+}
+
+double regression_forecast(const std::vector<double>& xs, const std::vector<double>& ys, double x)
+{
+    const RegressionResult result = linear_regression(xs, ys);
+    return result.slope * x + result.intercept;
+}
+
+double regression_steyx(const std::vector<double>& xs, const std::vector<double>& ys)
+{
+    if (xs.size() != ys.size()) {
+        throw std::invalid_argument("xs and ys must have the same length");
+    }
+    if (xs.size() < 3) {
+        throw std::invalid_argument("steyx requires at least three points");
+    }
+
+    const RegressionResult result = linear_regression(xs, ys);
+    double sum = 0.0;
+    for (std::size_t i = 0; i < xs.size(); ++i) {
+        const double estimate = result.slope * xs[i] + result.intercept;
+        const double residual = ys[i] - estimate;
+        sum += residual * residual;
+    }
+    return std::sqrt(sum / static_cast<double>(xs.size() - 2));
 }
 
 double normal_pdf(double x, double mean_value, double stdev)
@@ -233,6 +403,38 @@ std::vector<double> moving_average_simple(const std::vector<double>& values, std
     for (std::size_t i = window; i < values.size(); ++i) {
         rolling += values[i] - values[i - window];
         result.push_back(rolling / static_cast<double>(window));
+    }
+    return result;
+}
+
+std::vector<double> moving_average_cumulative(const std::vector<double>& values)
+{
+    require_non_empty(values, "values");
+    std::vector<double> result;
+    result.reserve(values.size());
+    double running = 0.0;
+    for (std::size_t i = 0; i < values.size(); ++i) {
+        running += values[i];
+        result.push_back(running / static_cast<double>(i + 1));
+    }
+    return result;
+}
+
+std::vector<double> moving_average_exponential(const std::vector<double>& values, double alpha)
+{
+    require_non_empty(values, "values");
+    require_finite(alpha, "alpha");
+    if (alpha <= 0.0 || alpha > 1.0) {
+        throw std::invalid_argument("alpha must be in (0, 1]");
+    }
+
+    std::vector<double> result;
+    result.reserve(values.size());
+    double current = values.front();
+    result.push_back(current);
+    for (std::size_t i = 1; i < values.size(); ++i) {
+        current = alpha * values[i] + (1.0 - alpha) * current;
+        result.push_back(current);
     }
     return result;
 }

@@ -49,9 +49,26 @@ window.OlympCoreMethods = (() => {
         mean: "Среднее",
         median: "Медиана",
         variance: "Дисперсия",
+        populationVariance: "Дисп. совокупности",
         stdev: "Ст. откл.",
+        populationStdev: "Ст. откл. совокупности",
         slope: "Наклон",
         intercept: "Сдвиг",
+        covariance: "Ковариация",
+        pearson: "Пирсон",
+        skewness: "Асимметрия",
+        kurtosis: "Эксцесс",
+        moment2: "Момент 2",
+        moment3: "Момент 3",
+        range: "Размах",
+        kthSmall: "K-е малое",
+        kthLarge: "K-е большое",
+        averageDeviation: "Средн. отклонение",
+        devsq: "Сумма кв. откл.",
+        geometricMean: "Геом. среднее",
+        harmonicMean: "Гарм. среднее",
+        forecast: "Прогноз",
+        steyx: "STEYX",
         rSquared: "R квадрат",
         points: "Точки",
         pdf: "PDF",
@@ -126,9 +143,26 @@ window.OlympCoreMethods = (() => {
         mean: "Mean",
         median: "Median",
         variance: "Variance",
+        populationVariance: "Population var.",
         stdev: "Stdev",
+        populationStdev: "Population stdev",
         slope: "Slope",
         intercept: "Intercept",
+        covariance: "Covariance",
+        pearson: "Pearson",
+        skewness: "Skewness",
+        kurtosis: "Kurtosis",
+        moment2: "Moment 2",
+        moment3: "Moment 3",
+        range: "Range",
+        kthSmall: "K-th small",
+        kthLarge: "K-th large",
+        averageDeviation: "Avg. deviation",
+        devsq: "DevSq",
+        geometricMean: "Geometric mean",
+        harmonicMean: "Harmonic mean",
+        forecast: "Forecast",
+        steyx: "STEYX",
         rSquared: "R squared",
         points: "Points",
         pdf: "PDF",
@@ -183,17 +217,17 @@ window.OlympCoreMethods = (() => {
         method("average", "Average", "ready", "Mean over all values.", "среднее по всем значениям.", "src/stats.cpp", fieldPresets.series),
         method("median", "Median", "ready", "Median value for a numeric sample.", "медиана числовой выборки.", "src/stats.cpp", fieldPresets.series),
         method("quantile_inc", "Quantile inclusive", "ready", "Inclusive percentile interpolation.", "инклюзивная интерполяция процентиля.", "src/stats.cpp", [...fieldPresets.series, { id: "percentile", type: "number", sample: "0.25", min: "0", max: "1", step: "0.01" }]),
-        method("quantile_exc", "Quantile exclusive", "porting", "Exclusive quantile calculation.", "эксклюзивный расчёт квантиля.", "Stats/Descriptive/quantile_exc.*", [...fieldPresets.series, { id: "percentile", type: "number", sample: "0.25", min: "0", max: "1", step: "0.01" }]),
-        method("percentrank", "Percent rank inc/exc", "porting", "Inclusive and exclusive percentile rank.", "инклюзивный и эксклюзивный процентный ранг.", "Stats/Descriptive/percentrank_*", [...fieldPresets.series, { id: "x", type: "number", sample: "14" }]),
+        method("quantile_exc", "Quantile exclusive", "ready", "Exclusive quantile calculation.", "эксклюзивный расчёт квантиля.", "Stats/Descriptive/quantile_exc.*", [...fieldPresets.series, { id: "percentile", type: "number", sample: "0.25", min: "0", max: "1", step: "0.01" }]),
+        method("percentrank", "Percent rank inc/exc", "ready", "Inclusive and exclusive percentile rank.", "инклюзивный и эксклюзивный процентный ранг.", "Stats/Descriptive/percentrank_*", [...fieldPresets.series, { id: "x", type: "number", sample: "14" }]),
         method("variance", "Variance sample/population", "ready", "Sample variance is interactive now; population variance is queued.", "выборочная дисперсия уже интерактивна; генеральная в очереди.", "src/stats.cpp, Stats/Descriptive/var_*", fieldPresets.series),
         method("stdev", "Standard deviation sample/population", "ready", "Sample standard deviation is interactive now; population version is queued.", "выборочное стандартное отклонение уже интерактивно; генеральное в очереди.", "src/stats.cpp, Stats/Descriptive/stdev_*", fieldPresets.series),
-        method("cov_pearson", "Covariance and Pearson", "porting", "Covariance, population covariance, Pearson correlation.", "ковариация, ковариация генеральной совокупности, корреляция Пирсона.", "Stats/Descriptive/cov*, pearson.*", fieldPresets.paired),
-        method("moments", "Skew, kurtosis, moments", "porting", "Shape metrics and raw/central moments.", "метрики формы распределения и начальные/центральные моменты.", "Stats/Descriptive/skew.*, kurt.*, moment*", fieldPresets.series),
-        method("rank", "Rank average/equal", "porting", "Ranking with average or equal-rank handling.", "ранжирование со средними или равными рангами.", "Stats/Descriptive/rank_*", fieldPresets.series),
-        method("order_stats", "Large, small, range", "porting", "Order statistics and numeric range.", "порядковые статистики и размах.", "Stats/Descriptive/large.*, small.*, range.*", [...fieldPresets.series, { id: "x", type: "number", sample: "2" }]),
+        method("cov_pearson", "Covariance and Pearson", "ready", "Covariance, population covariance, Pearson correlation.", "ковариация, ковариация генеральной совокупности, корреляция Пирсона.", "Stats/Descriptive/cov*, pearson.*", fieldPresets.paired),
+        method("moments", "Skew, kurtosis, moments", "ready", "Shape metrics and raw/central moments.", "метрики формы распределения и начальные/центральные моменты.", "Stats/Descriptive/skew.*, kurt.*, moment*", fieldPresets.series),
+        method("rank", "Rank average/equal", "ready", "Ranking with average or equal-rank handling.", "ранжирование со средними или равными рангами.", "Stats/Descriptive/rank_*", fieldPresets.series),
+        method("order_stats", "Large, small, range", "ready", "Order statistics and numeric range.", "порядковые статистики и размах.", "Stats/Descriptive/large.*, small.*, range.*", [...fieldPresets.series, { id: "x", type: "number", sample: "2" }]),
         method("anova", "ANOVA", "porting", "Single-factor, two-factor and repeated ANOVA.", "однофакторный, двухфакторный и повторный ANOVA.", "Stats/Descriptive/anova_*", [{ id: "matrix", type: "matrix", sample: "8,9,6\n7,10,8\n9,11,7" }, { id: "alpha", type: "number", sample: "0.05", step: "0.01" }]),
         method("crosstabulate", "Crosstabulate numbers", "porting", "Numeric crosstabulation.", "числовая перекрёстная таблица.", "Stats/Descriptive/crosstabulate_numbers.*", [{ id: "categories", type: "text", sample: "A, B, A, C, B" }, ...fieldPresets.series]),
-        method("deviation_means", "AveDev, DevSq, Geo/Harmonic mean", "porting", "Average deviation, sum of square deviations, geometric and harmonic means.", "среднее отклонение, сумма квадратов отклонений, геометрическое и гармоническое среднее.", "Stats/Descriptive/avedev.*, devsq.*, geoharmean.*", fieldPresets.series)
+        method("deviation_means", "AveDev, DevSq, Geo/Harmonic mean", "ready", "Average deviation, sum of square deviations, geometric and harmonic means.", "среднее отклонение, сумма квадратов отклонений, геометрическое и гармоническое среднее.", "Stats/Descriptive/avedev.*, devsq.*, geoharmean.*", fieldPresets.series)
       ]
     },
     {
@@ -218,10 +252,10 @@ window.OlympCoreMethods = (() => {
       id: "regression",
       methods: [
         method("linear_regression", "Linear regression", "ready", "Slope, intercept and R squared.", "наклон, сдвиг и R квадрат.", "src/stats.cpp", fieldPresets.paired),
-        method("slope", "Slope", "porting", "Legacy slope operator.", "старый оператор наклона.", "Stats/Regression/slope.*", fieldPresets.paired),
-        method("intercept", "Intercept", "porting", "Legacy intercept operator.", "старый оператор свободного члена.", "Stats/Regression/intercept.*", fieldPresets.paired),
-        method("forecast", "Forecast", "porting", "Linear forecast from known X/Y values.", "линейный прогноз по известным X/Y.", "Stats/Regression/forecast.*", [...fieldPresets.paired, { id: "x", type: "number", sample: "11" }]),
-        method("steyx", "STEYX", "porting", "Standard error of predicted Y.", "стандартная ошибка предсказанного Y.", "Stats/Regression/steyx.*", fieldPresets.paired),
+        method("slope", "Slope", "ready", "Legacy slope operator.", "старый оператор наклона.", "Stats/Regression/slope.*", fieldPresets.paired),
+        method("intercept", "Intercept", "ready", "Legacy intercept operator.", "старый оператор свободного члена.", "Stats/Regression/intercept.*", fieldPresets.paired),
+        method("forecast", "Forecast", "ready", "Linear forecast from known X/Y values.", "линейный прогноз по известным X/Y.", "Stats/Regression/forecast.*", [...fieldPresets.paired, { id: "x", type: "number", sample: "11" }]),
+        method("steyx", "STEYX", "ready", "Standard error of predicted Y.", "стандартная ошибка предсказанного Y.", "Stats/Regression/steyx.*", fieldPresets.paired),
         method("naive_bayes", "Naive Bayes", "porting", "Classification helper.", "вспомогательный классификатор.", "Stats/Regression/naive_bayes.cpp", [{ id: "matrix", type: "matrix", sample: "1,0,1\n0,1,0\n1,1,1" }])
       ]
     },
@@ -229,10 +263,10 @@ window.OlympCoreMethods = (() => {
       id: "smoothing",
       methods: [
         method("simple_moving_average", "Simple moving average", "ready", "Interactive rolling average by window.", "интерактивное скользящее среднее по окну.", "src/stats.cpp", [...fieldPresets.series, { id: "window", type: "number", sample: "3", min: "1", step: "1" }]),
-        method("cumulative_moving_average", "Cumulative moving average", "porting", "Cumulative average over time.", "накопительное среднее по времени.", "Stats/Smoothing/moving_average_cumulative.*", fieldPresets.series),
+        method("cumulative_moving_average", "Cumulative moving average", "ready", "Cumulative average over time.", "накопительное среднее по времени.", "Stats/Smoothing/moving_average_cumulative.*", fieldPresets.series),
         method("weighted_moving_average", "Weighted moving average", "porting", "Weighted rolling average.", "взвешенное скользящее среднее.", "Stats/Smoothing/moving_average_weighted.*", fieldPresets.series),
         method("triangular_moving_average", "Triangular moving average", "porting", "Triangular smoothing window.", "треугольное сглаживающее окно.", "Stats/Smoothing/moving_average_triangular.*", fieldPresets.series),
-        method("exponential_moving_average", "Exponential moving average", "porting", "EMA smoothing.", "экспоненциальное скользящее среднее.", "Stats/Smoothing/moving_average_exponential.*", [...fieldPresets.series, { id: "alpha", type: "number", sample: "0.3", min: "0", max: "1", step: "0.01" }])
+        method("exponential_moving_average", "Exponential moving average", "ready", "EMA smoothing.", "экспоненциальное скользящее среднее.", "Stats/Smoothing/moving_average_exponential.*", [...fieldPresets.series, { id: "alpha", type: "number", sample: "0.3", min: "0", max: "1", step: "0.01" }])
       ]
     },
     group("timeSeries", [
@@ -290,6 +324,10 @@ window.OlympCoreMethods = (() => {
     ...methodItem,
     group: groupItem.id
   })));
+  const standardize = methods.find((item) => item.id === "standardize");
+  if (standardize) {
+    standardize.status = "ready";
+  }
 
   return { groups, methods, i18n };
 })();
