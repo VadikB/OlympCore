@@ -1,0 +1,65 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build tests",
+      "type": "shell",
+      "command": "mkdir -p build/vscode && c++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude src/stats.cpp tests/test_stats.cpp -o build/vscode/olympcore_tests",
+      "group": "build",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Run tests",
+      "type": "shell",
+      "command": "build/vscode/olympcore_tests",
+      "dependsOn": "Build tests",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build CLI demo",
+      "type": "shell",
+      "command": "mkdir -p build/vscode && c++ -std=c++17 -Wall -Wextra -Wpedantic -Iinclude src/stats.cpp apps/olympcore_demo.cpp -o build/vscode/olympcore_demo",
+      "group": "build",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Run CLI demo",
+      "type": "shell",
+      "command": "build/vscode/olympcore_demo summary \"1,2,3,4,5\"",
+      "dependsOn": "Build CLI demo",
+      "problemMatcher": []
+    },
+    {
+      "label": "Serve web demo",
+      "type": "shell",
+      "command": "python3 -m http.server 8765",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "python",
+        "pattern": {
+          "regexp": ".",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Serving HTTP",
+          "endsPattern": "Serving HTTP"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Open web demo URL",
+      "type": "shell",
+      "command": "python3 -m webbrowser http://localhost:8765/web/index.html",
+      "dependsOn": "Serve web demo",
+      "problemMatcher": []
+    }
+  ]
+}

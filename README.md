@@ -47,6 +47,39 @@ c++ -std=c++17 -Iinclude src/stats.cpp apps/olympcore_demo.cpp -o /tmp/olympcore
 
 Open `web/index.html` in a browser. It is a static UI with no server dependency.
 
+For local HTTP testing:
+
+```sh
+python3 -m http.server 8765
+```
+
+Then open:
+
+```text
+http://localhost:8765/web/index.html
+```
+
+`localhost` is your own computer. This URL works only while the local server is running on the same machine. It will not work as a public GitHub URL.
+
+## VS Code
+
+Open the workspace:
+
+```sh
+code OlympCore.code-workspace
+```
+
+Useful tasks are available from `Terminal > Run Task`:
+
+- `Build tests`
+- `Run tests`
+- `Build CLI demo`
+- `Run CLI demo`
+- `Serve web demo`
+- `Open web demo URL`
+
+The workspace uses `c++` directly, so CMake is optional for now.
+
 ## Porting Notes
 
 The next practical migration step is to replace legacy `TCArray`-based entry points module by module with `std::span`/`std::vector` based equivalents, while keeping tests beside each ported method.

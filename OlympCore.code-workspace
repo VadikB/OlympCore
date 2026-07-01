@@ -1,0 +1,15 @@
+{
+  "folders": [
+    {
+      "name": "OlympCore",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.DS_Store": true,
+      "**/build": true,
+      "**/cmake-build-*": true
+    }
+  }
+}

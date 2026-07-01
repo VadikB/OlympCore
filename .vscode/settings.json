@@ -1,0 +1,25 @@
+{
+  "C_Cpp.default.cppStandard": "c++17",
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/include",
+    "${workspaceFolder}/Stats"
+  ],
+  "files.associations": {
+    "*.h": "cpp",
+    "*.hpp": "cpp",
+    "*.cc": "cpp",
+    "*.defs": "makefile",
+    "*.targets": "xml",
+    "*.vcxproj": "xml",
+    "*.filters": "xml"
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/build": true,
+    "**/cmake-build-*": true,
+    "**/*.obj": true,
+    "**/*.pdb": true,
+    "**/*.res": true,
+    "**/*.manifest": true
+  }
+}
