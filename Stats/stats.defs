@@ -1,0 +1,170 @@
+ #<copyright>
+# Copyright (c) Microsoft Corporation.  All rights reserved.
+#</copyright>
+
+!include "..\..\..\..\Build\make.defs"
+
+EXIE = $(BUILD_ROOT)\Release\Product\Exie
+EXIEINC = $(EXIE)\Runtime\Include
+EXIEBIN = $(EXIE)\Runtime\Binaries\$(PLATFORM)\$(CONFIGURATION)
+LIBCOMMON = $(EXIE)\LibCommon
+
+DEFINES = $(DEFINES) /DOLYMPCORE_EXPORTS
+
+INCLUDES =  \
+  $(INCLUDES) \
+  /I..\ \
+  /I..\dist \
+  /I..\..\Math\ReductionsScans \
+  /I..\DataProcessing \
+  /I..\Regression \
+  /I$(EXIEINC) \
+  /I$(LIBCOMMON) \
+  /I$(INTEL_IPP_INCLUDES) \
+  /I$(INTEL_MKL_INCLUDES) \
+
+LIBS = $(TARGET_DIR)\TCMath.lib \
+    $(TARGET_DIR_COMMON)\TCCommon.lib \
+    $(EXIEBIN)\ExieRuntime.lib \
+    $(TARGET_DIR_COMMON)\LibCommon.lib \
+    $(INTEL_IPP_LIBS_L) \
+    $(LIBS) \
+
+SYSTEM_LIBS = \
+    user32.lib \
+
+# note: since TCMath.h may be rebuilt whenever Math is rebuilt,
+# all objects in this directory may be rebuilt whenever Math is rebuilt
+
+DEPS = \
+  ..\stdafx.h \
+  ..\targetver.h \
+  ..\OlympCoreUtils.h \
+  $(TCINCLUDE)\OlympCore.h \
+  $(TCINCLUDE)\TCMath.h \
+  $(TCINCLUDE)\TCCommon.h \
+  $(TCINCLUDE)\TCComplex.h \
+  $(TCINCLUDE)\TCError.h \
+  $(TCINCLUDE)\TCInternal.h \
+  $(TCINCLUDE)\TCTypes.h \
+  $(TCINCLUDE)\TCArray.h \
+  $(TCINCLUDE)\TCReduce.h \
+  $(TCINCLUDE)\TCFuncWrapper.h \
+  $(LIBCOMMON)\LibCommon.h \
+
+# object files which will be included into both Server and Client library
+OBJS = \
+  $(INT_DIR)\dllmain.obj \
+  $(INT_DIR)\anova_single.obj \
+  $(INT_DIR)\anova_two.obj \
+  $(INT_DIR)\anova_tworep.obj \
+  $(INT_DIR)\avedev.obj \
+  $(INT_DIR)\average.obj \
+  $(INT_DIR)\geoharmean.obj \
+  $(INT_DIR)\bernoulli.obj \
+  $(INT_DIR)\beta.obj \
+  $(INT_DIR)\binom.obj \
+  $(INT_DIR)\cauchy.obj \
+  $(INT_DIR)\cauchy_rand.obj \
+  $(INT_DIR)\chisq.obj \
+  $(INT_DIR)\cov.obj \
+  $(INT_DIR)\covp.obj \
+  $(INT_DIR)\crosstabulate_numbers.obj \
+  $(INT_DIR)\devsq.obj \
+  $(INT_DIR)\dq_test.obj \
+  $(INT_DIR)\esd.obj \
+  $(INT_DIR)\expon.obj \
+  $(INT_DIR)\f.obj \
+  $(INT_DIR)\fisher.obj \
+  $(INT_DIR)\fisher_test.obj \
+  $(INT_DIR)\forecast.obj \
+  $(INT_DIR)\gamma.obj \
+  $(INT_DIR)\geometric.obj \
+  $(INT_DIR)\geometric_rand.obj \
+  $(INT_DIR)\gev.obj \
+  $(INT_DIR)\gumbel.obj \
+  $(INT_DIR)\hypgeom.obj \
+  $(INT_DIR)\hypgeom_rand.obj \
+  $(INT_DIR)\imputation_match.obj \
+  $(INT_DIR)\interquartile_dist.obj \
+  $(INT_DIR)\intercept.obj \
+  $(INT_DIR)\ks_test.obj \
+  $(INT_DIR)\ks2_test.obj \
+  $(INT_DIR)\kurt.obj \
+  $(INT_DIR)\laplace.obj \
+  $(INT_DIR)\large.obj \
+  $(INT_DIR)\logistic.obj \
+  $(INT_DIR)\lognorm.obj \
+  $(INT_DIR)\lvcf.obj \
+  $(INT_DIR)\negbinom.obj \
+  $(INT_DIR)\norm.obj \
+  $(INT_DIR)\norm_s.obj \
+  $(INT_DIR)\median.obj \
+  $(INT_DIR)\median_dev.obj \
+  $(INT_DIR)\moment.obj \
+  $(INT_DIR)\moment_central.obj \
+  $(INT_DIR)\pareto.obj \
+  $(INT_DIR)\pearson.obj \
+  $(INT_DIR)\percentrank_exc.obj \
+  $(INT_DIR)\percentrank_inc.obj \
+  $(INT_DIR)\regressionOperators.obj \
+  $(INT_DIR)\poisson.obj \
+  $(INT_DIR)\poisson_rand.obj \
+  $(INT_DIR)\quantile_exc.obj \
+  $(INT_DIR)\quantile_inc.obj \
+  $(INT_DIR)\rand_perm.obj \
+  $(INT_DIR)\rank_eq.obj \
+  $(INT_DIR)\rank_avg.obj \
+  $(INT_DIR)\range.obj \
+  $(INT_DIR)\skew.obj \
+  $(INT_DIR)\rayleigh.obj \
+  $(INT_DIR)\rayleigh_rand.obj \
+  $(INT_DIR)\standardize.obj \
+  $(INT_DIR)\slope.obj \
+  $(INT_DIR)\small.obj \
+  $(INT_DIR)\steyx.obj \
+  $(INT_DIR)\t.obj \
+  $(INT_DIR)\t_test.obj \
+  $(INT_DIR)\time_series_forecast.obj \
+  $(INT_DIR)\timeseries_aicbic.obj \
+  $(INT_DIR)\timeseries_acf.obj \
+  $(INT_DIR)\timeseries_ar.obj \
+  $(INT_DIR)\chisq_test.obj \
+  $(INT_DIR)\stdev_p.obj \
+  $(INT_DIR)\stdev_s.obj \
+  $(INT_DIR)\uniform.obj \
+  $(INT_DIR)\uniform_rand.obj \
+  $(INT_DIR)\discruni_rand.obj \
+  $(INT_DIR)\expon_rand.obj \
+  $(INT_DIR)\norm_rand.obj \
+  $(INT_DIR)\norm_s_rand.obj \
+  $(INT_DIR)\binom_rand.obj \
+  $(INT_DIR)\negbinom_rand.obj \
+  $(INT_DIR)\bernoulli_rand.obj \
+  $(INT_DIR)\chisq_rand.obj \
+  $(INT_DIR)\beta_rand.obj \
+  $(INT_DIR)\gamma_rand.obj \
+  $(INT_DIR)\lognorm_rand.obj \
+  $(INT_DIR)\pareto_rand.obj \
+  $(INT_DIR)\f_rand.obj \
+  $(INT_DIR)\var_p.obj \
+  $(INT_DIR)\var_s.obj \
+  $(INT_DIR)\weibull.obj \
+  $(INT_DIR)\weibull_rand.obj \
+  $(INT_DIR)\mw_test.obj \
+  $(INT_DIR)\z_test.obj \
+  $(INT_DIR)\wsr_test.obj \
+  $(INT_DIR)\imputation_mean.obj \
+  $(INT_DIR)\moving_average_simple.obj \
+  $(INT_DIR)\moving_average_weighted.obj \
+  $(INT_DIR)\moving_average_triangular.obj \
+  $(INT_DIR)\moving_average_cumulative.obj \
+  $(INT_DIR)\moving_average_exponential.obj \
+  $(INT_DIR)\adf_test.obj \
+  $(INT_DIR)\poisson_fit.obj \
+  $(INT_DIR)\expon_fit.obj \
+  $(INT_DIR)\OlympCoreUtils.obj \
+  $(INT_DIR)\naive_bayes.obj \
+  $(INT_DIR)\norm_fit.obj \
+  $(INT_DIR)\binom_fit.obj \
+  $(INT_DIR)\TCRNGUtils.obj \
