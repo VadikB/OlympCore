@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -36,7 +36,7 @@ namespace Dist
             else if (x < (T)0.0)
             {
                 T tmp = Utils::sqrt(x * x + deg);
-                //z = deg_half / tmp / (tmp - x);
+                
                 z = deg_half / (x * x + deg - tmp * x);
             }
     
@@ -79,8 +79,8 @@ namespace Dist
             {
                 if(Utils::floor(size)==T(2.0))
                 {
-                    //special case
-                    //-cot(1-alpha*pi/2)=cot(alpha*pi/2)
+                    
+                    
                     return Utils::cot(alpha*Utils::pi()/T(2.0)) * standard_dev
                         / Utils::sqrt(Utils::floor(size));
                 }
@@ -88,7 +88,7 @@ namespace Dist
                 {
                     if(alpha<T(0.7))
                     {
-                        //yet another spacial case
+                        
                         T deg_freedom = Utils::floor(size)-T(1.0);
                         T deg = Utils::floor(deg_freedom);
                         T deg_half = deg / T(2.0);

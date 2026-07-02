@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 #pragma once
 
 #include "OlympCoreUtils.h"
@@ -15,8 +15,8 @@ template <typename T>
 class Hypgeom
 {
 private:
-    // This code has been optimized for performance.
-    // Please be careful to preserve current perf when modifying.
+    
+    
     static __inline T ComputePMF(const T x, const T n, const T M, const T N) 
     {
         T param1 = Utils::combin(n, x);
@@ -76,23 +76,23 @@ public:
         const T M = Utils::floor(population_s);
         const T N = Utils::floor(number_population);
 
-        // Compute for valid inputs
+        
         if (x == x && M <= N && n <= N && n >= 1 && M >= 0 && N >= 1 && !Utils::isinf(N))   
         {
-            if (x < 0 || sample_s != x || (n - x) > (N - M) || x > M || x > n )     // handle special inputs
+            if (x < 0 || sample_s != x || (n - x) > (N - M) || x > M || x > n )     
             {
                 return 0;
             }
             return ComputePMF(x, n, M, N);
         }
 
-        // Check for NaN inputs
+        
         if (Utils::isnan(number_sample))        return number_sample;
         if (Utils::isnan(population_s))         return population_s;
         if (Utils::isnan(number_population))    return number_population;
         if (Utils::isnan(sample_s))             return sample_s;
         
-        // Check for Out-of-domain inputs 
+        
         if (N < 1 || Utils::isinf(N))
         {
             return TCError::NewError<T>(number_population,  TCFuncId_HYPGEOM_DIST, TCArgPosition_4, TCError_IllegalInput);
@@ -101,12 +101,12 @@ public:
         {
             return TCError::NewError<T>(number_sample,  TCFuncId_HYPGEOM_DIST, TCArgPosition_2, TCError_IllegalInput);
         }
-        assert(M > N || M < 0);                              // M > N || M < 0
+        assert(M > N || M < 0);                              
         return TCError::NewError<T>(population_s,  TCFuncId_HYPGEOM_DIST, TCArgPosition_3, TCError_IllegalInput);
     }
 
-    // This code has been optimized for performance.
-    // Please be careful to preserve current perf when modifying.
+    
+    
     static T CDF(const T sample_s, const T number_sample, const T population_s, const T number_population) 
     {
         T x = Utils::floor(sample_s);
@@ -114,10 +114,10 @@ public:
         const T M = Utils::floor(population_s);
         const T N = Utils::floor(number_population);
 
-        // Compute for valid inputs
+        
         if (x == x && M <= N && n <= N && n >= 1 && M >= 0 && N >= 1 && !Utils::isinf(N))             
         {
-            if (x < 0 || (n - x) > (N - M))                          // handle special inputs
+            if (x < 0 || (n - x) > (N - M))                          
             {
                 return T(0);
             }
@@ -139,7 +139,7 @@ public:
                 T mean = n * M / N;
                 T lower = MAX(0, n - N + M);
                 T upper = MIN(M,MIN(N, x));
-                mean = MIN(ROUND(mean), upper);      // TODO round(mean)
+                mean = MIN(ROUND(mean), upper);      
                 T diff = 1;
                 if (x >= mean)
                 {
@@ -187,13 +187,13 @@ public:
             return MIN(result, 1);
         }
 
-        // Check for NaN inputs
+        
         if (Utils::isnan(number_sample))        return number_sample;
         if (Utils::isnan(population_s))         return population_s;
         if (Utils::isnan(number_population))    return number_population;
         if (Utils::isnan(sample_s))             return sample_s;
         
-        // Check for Out-of-domain inputs 
+        
         if (N < 1 || Utils::isinf(N))
         {
             return TCError::NewError<T>(number_population,  TCFuncId_HYPGEOM_DIST, TCArgPosition_4, TCError_IllegalInput);
@@ -202,7 +202,7 @@ public:
         {
             return TCError::NewError<T>(number_sample,  TCFuncId_HYPGEOM_DIST, TCArgPosition_2, TCError_IllegalInput);
         }
-        assert(M > N || M < 0);                              // M > N || M < 0
+        assert(M > N || M < 0);                              
         return TCError::NewError<T>(population_s,  TCFuncId_HYPGEOM_DIST, TCArgPosition_3, TCError_IllegalInput);
     }
 
@@ -212,7 +212,7 @@ public:
         const T M = Utils::floor(population_s);
         const T N = Utils::floor(number_population);
 
-        // Compute for valid inputs
+        
         if (probability >= 0 && probability <= 1 && M <= N && n <= N && n >= 1 && M >= 0 && N >= 1 && !Utils::isinf(N))  
         {
             T result = 0;
@@ -253,13 +253,13 @@ public:
             return x;
         }
 
-        // Check for NaN inputs
+        
         if (Utils::isnan(number_sample))        return number_sample;
         if (Utils::isnan(population_s))         return population_s;
         if (Utils::isnan(number_population))    return number_population;
         if (Utils::isnan(probability))          return probability;
 
-        // Check for Out-of-domain inputs
+        
         if (probability < 0 || probability > 1) 
         {
             return TCError::NewError<T>(probability,  TCFuncId_HYPGEOM_INV, TCArgPosition_1, TCError_IllegalInput);
@@ -272,8 +272,8 @@ public:
         {
             return TCError::NewError<T>(number_sample,  TCFuncId_HYPGEOM_INV, TCArgPosition_2, TCError_IllegalInput);
         }
-        assert(M > N || M < 0);                              // M > N || M < 0
+        assert(M > N || M < 0);                              
         return TCError::NewError<T>(population_s,  TCFuncId_HYPGEOM_INV, TCArgPosition_3, TCError_IllegalInput);
     }
-};      // class Hypgeom
-}       // namespace Dist
+};      
+}       

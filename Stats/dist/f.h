@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -70,7 +70,7 @@ namespace Dist
             T numerator = 0, denominator = 0;
             T inf_val = Utils::infinity<T>();
 
-            //check for NaN as betainc's NaN hanlding is not available now
+            
             BAIL_ON_NAN(x, result);
             BAIL_ON_NAN(deg_freedom1, result);
             BAIL_ON_NAN(deg_freedom2, result);
@@ -96,7 +96,7 @@ namespace Dist
                 {
                     result = 1;
                 }
-                else if (Utils::isinf(x))   //x = +inf
+                else if (Utils::isinf(x))   
                 {
                     result = 0;
                 }
@@ -112,7 +112,7 @@ namespace Dist
                 {
                     result = 0;
                 }
-                else if (Utils::isinf(x))   //x = +inf
+                else if (Utils::isinf(x))   
                 {
                     result = 1;
                 }
@@ -120,7 +120,7 @@ namespace Dist
                 {
                     if (Utils::isinf(d1)== false && Utils::isinf(x)== false && Utils::isinf(d1 *x))
                     {
-                        //d1 * x is inf, cannot compute d1 * x, change a different format
+                        
                         z = 1.0 / (1.0 + d2/d1 /x);
                     }
                     else
@@ -136,7 +136,7 @@ namespace Dist
                 {
                     result = 0;
                 }
-                else if (Utils::isinf(x))   //x = +inf
+                else if (Utils::isinf(x))   
                 {
                     result = 0;
                 }
@@ -195,7 +195,7 @@ namespace Dist
             T zinv=0;
             T margin = 0.01;
 
-            //check for NaN as betainc's NaN hanlding is not available now
+            
             BAIL_ON_NAN(probability, result);
             BAIL_ON_NAN(deg_freedom1, result);
             BAIL_ON_NAN(deg_freedom2, result);
@@ -212,7 +212,7 @@ namespace Dist
                 BAIL();
             }
 
-            //probability must be between 0 and 1
+            
             if (probability < 0 || probability > 1)
             {
                 result = TCError::NewError<T>(probability,  TCFuncId_F_INV, TCArgPosition_1, TCError_IllegalInput);

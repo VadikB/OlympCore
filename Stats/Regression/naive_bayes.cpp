@@ -1,9 +1,9 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
-//#include "naive_bayes.h"
+
 #include <limits>
 #include <vector>
 
@@ -106,7 +106,7 @@ TCErrorCode do_nb_training(
         assert(iClass < nClasses);
         if (iClass >= nClasses)
         {
-            // skip sample if result is out of range.
+            
             ptr_sample_data += nFeatures;
             continue;
         }

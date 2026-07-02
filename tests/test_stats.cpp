@@ -22,7 +22,7 @@ void expect_true(bool condition, const std::string& name)
     }
 }
 
-} // namespace
+} 
 
 int main()
 {

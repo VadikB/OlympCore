@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -137,5 +137,5 @@ namespace Dist
 
             return 1. - B[m];
         }
-    }; // class KS2Samples
-} // namespace Dist
+    }; 
+} 

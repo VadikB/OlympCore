@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -27,7 +27,7 @@ struct median_dev_t : public Sort::operator_temp_copy_t<T>
         }
         const T Inf = Utils::infinity<T>();
         T* data = state.data();
-        // MEDIAN ( abs( X - MEDIAN(X) ) )
+        
         T median_value = median<T>(data, nelem);
         if (TCError::IsErrorImpl<T>::run(&median_value))
         {
@@ -46,7 +46,7 @@ struct median_dev_t : public Sort::operator_temp_copy_t<T>
         }
         else
         {
-            // median(x) is finite
+            
             for (TCSize_t i = 0;  i < nelem; i++ )
             {
                 T v = data[i];
@@ -63,7 +63,7 @@ struct median_dev_t : public Sort::operator_temp_copy_t<T>
                 }
             }
         }
-        // data contains abs deviations from median
+        
         result = median<T>(data, nelem);
         return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
     }

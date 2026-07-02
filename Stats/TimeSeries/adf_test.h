@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -39,7 +39,7 @@ namespace adf_test_internal
         static TCDouble InterpolatePvalue(TestModel testModel, TCUInt32 testType, TCDouble s, TCUInt32 m);
     };
 
-    // AR model, Rho statistic
+    
     static const TCDouble arRhoSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble arRhoSigLevels[9] = { 0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975, 0.99, 0.99 };
     static const TCDouble arRhoTable[6*9] =
@@ -52,7 +52,7 @@ namespace adf_test_internal
         -2.58, -2.23, -1.95, -1.62, 0.89, 1.28, 1.62, 2.00, 2.00,
     };
 
-    // ARD model, Rho statistic
+    
     static const TCDouble ardRhoSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble ardRhoSigLevels[9] = { 0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975, 0.99, 0.99 };
     static const TCDouble ardRhoTable[6*9] =
@@ -65,7 +65,7 @@ namespace adf_test_internal
         -3.43, -3.12, -2.86, -2.57, -0.44, -0.07, 0.23, 0.60, 0.60,
     };
 
-    // TS model, Rho statistic
+    
     static const TCDouble tsRhoSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble tsRhoSigLevels[9] = { 0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975, 0.99, 0.99 };
     static const TCDouble tsRhoTable[6*9] =
@@ -78,7 +78,7 @@ namespace adf_test_internal
         -3.96, -3.66, -3.41, -3.12, -1.25, -0.94, -0.66, -0.33, -0.33
     };
 
-    // AR model, DF statistic
+    
     static const TCDouble arDFSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble arDFSigLevels[9] = { 0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975, 0.99, 0.99 };
     static const TCDouble arDFTable[6*9] =
@@ -91,7 +91,7 @@ namespace adf_test_internal
         -13.8, -10.5, -8.1, -5.7, 0.93, 1.28, 1.60, 2.03, 2.03
     };
 
-    // ARD model, DF statistic
+    
     static const TCDouble ardDFSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble ardDFSigLevels[9] = { 0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975, 0.99, 0.99 };
     static const TCDouble ardDFTable[6*9] =
@@ -104,7 +104,7 @@ namespace adf_test_internal
         -20.7, -16.9,  -14.1, -11.3, -0.85, -0.13, 0.41, 1.04, 1.04
     };
 
-    // TS model, DF statistic
+    
     static const TCDouble tsDFSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble tsDFSigLevels[9] = { 0.01, 0.025, 0.05, 0.10, 0.90, 0.95, 0.975, 0.99, 0.99 };
     static const TCDouble tsDFTable[6*9] =
@@ -117,7 +117,7 @@ namespace adf_test_internal
         -29.5, -25.1,  -21.8, -18.3, -3.77, -2.66, -1.79, -0.87, -0.87
     };
 
-    // ARD model, F statistic
+    
     static const TCDouble ardFSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble ardFSigLevels[9] = { 0.99, 0.975, 0.95, 0.90, 0.10, 0.05, 0.025, 0.01, 0.01 };
     static const TCDouble ardFTable[6*9] =
@@ -130,7 +130,7 @@ namespace adf_test_internal
         0.30, 0.40, 0.51, 0.67, 3.78, 4.59, 5.38, 6.43, 6.43
     };
 
-    // TS model, F statistic
+    
     static const TCDouble tsFSampleSizes[6] = { 25, 50, 100, 250, 500, 500 };
     static const TCDouble tsFSigLevels[9] = { 0.99, 0.975, 0.95, 0.90, 0.10, 0.05, 0.025, 0.01, 0.01 };
     static const TCDouble tsFTable[6*9] =
@@ -197,7 +197,7 @@ namespace adf_test_internal
         BData[extraConstrIdx * BLd] = (T)1.;
         BData[rhoIdx * BLd + 1] = (T)1.;
 
-        // Form c0
+        
         TCArray* c0;
         if (array_allocate1d<T>(n, &c0) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr c0Ptr(c0);
@@ -205,7 +205,7 @@ namespace adf_test_internal
         memset(c0Data, 0, n*sizeof(T));
         c0Data[rhoIdx] = (T)1.;
 
-        // U = sqrt((B*Rinv)*(B*Rinv)')
+        
         TCArray* U;
         if (array_allocate2d<T>(2, 2, &U) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr UPtr(U);
@@ -216,21 +216,21 @@ namespace adf_test_internal
         TimeSeriesUtilsLA::BlasGemm<T, mode>(TimeSeriesUtilsLA::noopOp, TimeSeriesUtilsLA::transOp, 1., Tmp, B, 0., U);
         TimeSeriesUtilsLA::Cholesky<T, mode>(U, upperTriangle);
 
-        // u = B*(c0-c);
+        
         TCArray* u;
         if (array_allocate1d<T>(2, &u) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr uPtr(u);
         TimeSeriesUtilsLA::Axpy<T, mode>(-1., c, c0);
         TimeSeriesUtilsLA::BlasGemv<T, mode>(TimeSeriesUtilsLA::noopOp, 1., B, c0, 0., u);
 
-        // u = U^(-1)u
+        
         TimeSeriesUtilsLA::BlasTrsv<T, mode>(
                 TimeSeriesUtilsLA::upperTriangular,
                 TimeSeriesUtilsLA::transOp,
                 TimeSeriesUtilsLA::nonUnitTriangular,
                 U, u);
 
-        // F = ((u'*u)/2) * (sse / (m - n))
+        
         T f = TimeSeriesUtilsLA::Dot<T, mode>(u, u);
         f *= (((T)m - n)) / (2. * sse);
 
@@ -314,7 +314,7 @@ namespace adf_test_internal
             return -1.;
         }
 
-        // Do linear interpolation for desired sample size
+        
         TCSize_t next;
         std::vector<TCDouble> table(sigLevelN);
         for (next = 0; next < sampleSizeN - 1; next++)
@@ -342,14 +342,14 @@ namespace adf_test_internal
             }
         }
 
-        // Do linear interpolation for desired statistic value
+        
         for (next = 0; next < sigLevelN - 1; next++)
         {
             if (table[next] >= s)
                 break;
         }
 
-        // Only one neighbor
+        
         if (next == 0 || next == (sigLevelN - 1))
         {
             return sigLevels[next];
@@ -367,52 +367,52 @@ namespace adf_test_internal
     template <typename T, TimeSeriesParallelMode mode>
     static TCErrorCode adf_test_internal(TCArray* ts, TCUInt32 p, TCInt32 testType, T* pvalue, TestModel testModel)
     {
-        // Check if we have 1d array
+        
         if (!TimeSeriesUtils::TCArrayIs1D(ts)) { return tcerror_code_new(TCError_IllegalInput, 1); }
 
-        // Check for meta values
+        
         if (TimeSeriesUtils::TCArray1DContainsMetaValues<T>(ts)) { return tcerror_code_new(TCError_IllegalInput, 1); }
 
-        // Check if testType is correct
+        
         if (testType != 1 && testType != 2 && testType != 3) { return tcerror_code_new(TCError_IllegalInput, 3); }
 
-        // Check of testType is correct for current testModel
+        
         if (testModel == arModel && testType == 3) { return tcerror_code_new(TCError_IllegalInput, TC_UNSPECIFIED_ARGID); }
 
-        // Check if p is positive
+        
         if (p == 0) { return tcerror_code_new(TCError_IllegalInput, 2); }
 
-        // Configure internal parameters
-        // Time series length
+        
+        
         TCSize_t l;
         TCErrorCode err = TCArray_Get_Numelt(ts, &l);
         if (err != TCError_NoError) { return err; }
 
-        // Non-stationary predictors num
+        
         TCSSize_t nNonStationary = 1;
         if (testModel == ardModel) { nNonStationary += 1; }
         if (testModel == tsModel) { nNonStationary += 2; }
-        // Total predictors num: p - 1 as y_t-1 included as part of nNonStationary
+        
         TCSize_t n = p - 1 + nNonStationary;
-        // First valid elements index for lagged series
+        
         TCSize_t lagStart = p;
-        // Regression eq. num
+        
         if (lagStart >= l) { return tcerror_code_new(TCError_IllegalInput, TC_UNSPECIFIED_ARGID); }
         TCSize_t m = l - lagStart;
 
-        // Check if we definetely have singular case.
-        // Also, require m > n, as we need cov estimation.
+        
+        
         if (m <= n) { return tcerror_code_new(TCError_IllegalInput, TC_UNSPECIFIED_ARGID); }
 
-        // Check if m is enough to perform table-based interpolation
+        
         if (m < ADFCVTable::minT) { return tcerror_code_new(TCError_IllegalInput, TC_UNSPECIFIED_ARGID); }
 
-        // Time series data
+        
         T* tsData = (T*)ts->m_data;
         TCSSize_t* tsStrides = ts->m_strides;
         TCSSize_t tsStride = tsStrides[0];
 
-        // Create OLS design matrix
+        
         TCArray *x;
         if (array_allocate2d<T>(m, n, &x) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr xPtr(x);
@@ -420,7 +420,7 @@ namespace adf_test_internal
         TCSSize_t* xStrides = x->m_strides;
         TCSSize_t xLd = xStrides[1];
 
-        // Fill in non-stationary part: const
+        
         TCSize_t xColIdx = 0;
         TCSize_t constIdx = xColIdx;
         T* xDataCol;
@@ -434,7 +434,7 @@ namespace adf_test_internal
             }
         }
 
-        // Fill in non-stationary part: time
+        
         TCSize_t timeIdx = xColIdx;
         if (testModel == tsModel)
         {
@@ -445,7 +445,7 @@ namespace adf_test_internal
             }
         }
 
-        // Fill in non-stationary part: y
+        
         TCSize_t rhoIdx = xColIdx;
         xDataCol = &xData[xLd * (xColIdx++)];
         for (i = 0; i < m; i++)
@@ -453,7 +453,7 @@ namespace adf_test_internal
             xDataCol[i] = tsData[(lagStart - 1 + i) * tsStride];
         }
 
-        // Fill in stationary part
+        
         TCSize_t zetaIdxStart = nNonStationary;
         TCSize_t j;
         for (j = nNonStationary; j < n; j++)
@@ -467,7 +467,7 @@ namespace adf_test_internal
             }
         }
 
-        // OLS RHS
+        
         TCArray *y;
         if (array_allocate1d<T>(m, &y) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr yPtr(y);
@@ -477,7 +477,7 @@ namespace adf_test_internal
             yData[i] = tsData[(lagStart + i) * tsStride];
         }
 
-        // Do LSE
+        
         TCArray *c;
         if (array_allocate1d<T>(n, &c) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr cPtr(c);
@@ -487,7 +487,7 @@ namespace adf_test_internal
         T sse;
         TimeSeriesUtilsOptimization::LinearLeastSquares<T, mode>(x, y, c, inorm, &sse);
 
-        // Test statistic calculation
+        
         T s = 0;
         switch(testType)
         {

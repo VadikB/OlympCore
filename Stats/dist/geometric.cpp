@@ -1,13 +1,13 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "geometric.h"
 
 using namespace Dist;
 
-// C interface functions
+
 TCDouble stats_dist_geometric_d(const TCDouble x, const TCDouble p, const TCBool cumulative)
 {
     if (cumulative)

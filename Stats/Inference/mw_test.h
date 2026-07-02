@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -84,7 +84,7 @@ namespace Inference
         return wmax;
     }
 
-    // Call for hypgeom
+    
     template <typename T>
     static T check_hyp_params(T x, T n, T M, T N, int cumul)
     {
@@ -121,7 +121,7 @@ namespace Inference
         T temp;
         TCSize_t numallelt;
 
-        // array of lists of type AllProb
+        
         std::vector<std::list<AllProb<T>>> dist_list(numdifelt + 1);  
             
         AllProb<T> elem_list;
@@ -312,7 +312,7 @@ namespace Inference
 
         switch (testtype)
         {
-        case 1: // Left tail
+        case 1: 
             {
                 code_return = mw_cdf<T>(ustat2, x_len, ties, asumt, numdifelt, pvalue);
                 if (code_return != TCError_NoError)
@@ -321,7 +321,7 @@ namespace Inference
                 }
                 break;
             }
-        case 2:  // Two tail
+        case 2:  
             {
                 ustat2 = std::min<int>(ustat2, 2 * x_len * y_len - ustat2);
                 code_return = mw_cdf<T>(ustat2, x_len, ties, asumt, numdifelt, &temp);
@@ -339,7 +339,7 @@ namespace Inference
                 }
                 break;
             }
-        case 3:  // Right tail
+        case 3:  
             {
                 code_return = mw_cdf<T>(ustat2, x_len, ties, asumt, numdifelt, pvalue);
                 if(code_return == TCError_NoError)
@@ -392,7 +392,7 @@ namespace Inference
 
         while (i < x_len)
         {
-            if (xvec[i] == pre_x) // ties in x
+            if (xvec[i] == pre_x) 
             {
                 tie_len_x++;
                 ux += rank; 
@@ -401,14 +401,14 @@ namespace Inference
                 i++; 
                 continue;
             }
-            else if (tie_len_x) // end of tie
+            else if (tie_len_x) 
             {
                 tie_len_x++;
                 tiesum += (T)(tie_len_x * (tie_len_x * tie_len_x - 1));
                 tie_len_x = 0;
             }
 
-            if (j == y_len) // end of y-sample
+            if (j == y_len) 
             {
                 ux += rank;
                 rank++;
@@ -418,7 +418,7 @@ namespace Inference
             }
             while (j < y_len)  
             {
-                if (yvec[j] == pre_y) // ties in y
+                if (yvec[j] == pre_y) 
                 {
                     tie_len_y++;
                     rank++;
@@ -426,7 +426,7 @@ namespace Inference
                     j++; 
                     continue;
                 }
-                else if (tie_len_y) // end of tie
+                else if (tie_len_y) 
                 {
                     tie_len_y++;
                     tiesum += (T)(tie_len_y * (tie_len_y * tie_len_y - 1));
@@ -441,7 +441,7 @@ namespace Inference
                 }
                 else 
                 {
-                    if (xvec[i] == yvec[j]) // x-y tie 
+                    if (xvec[i] == yvec[j]) 
                     {
                         tie_len_x++;
                         tie_len_y++;
@@ -494,16 +494,16 @@ namespace Inference
             } 
         }
 
-        while (j < y_len) // if x is ended and y is not
+        while (j < y_len) 
         {
-            if (yvec[j] == pre_y)  // ties in y
+            if (yvec[j] == pre_y)  
             {
                 tie_len_y++;
                 rank++; 
                 j++;
                 continue;
             }
-            else if (tie_len_y) // end of tie
+            else if (tie_len_y) 
             {
                 tie_len_y++;
                 tiesum += (T)( tie_len_y * ( tie_len_y * tie_len_y - 1) );
@@ -512,24 +512,24 @@ namespace Inference
             pre_y = yvec[j]; 
             j++;
         }
-        if(tie_len_x) // if last element was tied
+        if(tie_len_x) 
         {
             tiesum += (T)( tie_len_x * ( tie_len_x * tie_len_x - 1) );
             tie_len_x = 0;
         }
-        if(tie_len_y) // if last element was tied
+        if(tie_len_y) 
         {
             tiesum += (T)( tie_len_y * ( tie_len_y * tie_len_y - 1) );
             tie_len_y = 0;
         }
-        // Statistics
+        
         ustat = ux - (T)(x_len *( x_len + 1 )) * 0.5;
-        // Approximate formula
+        
         total_len = x_len + y_len;
         expU = .5 * ( (T)(x_len * y_len) );
-        // Correction for continuty
+        
         cont_corr = (ustat > expU ? -0.5 : (ustat < expU ? 0.5 : 0));
-        // Variance
+        
         varU =  expU * ((T)total_len + 1.) / 6.*(1. - tiesum / ((T)(total_len * ( total_len * total_len - 1 ))) );
 
         zstat = (ustat - expU + cont_corr) / Utils::sqrt(varU);  
@@ -550,7 +550,7 @@ namespace Inference
         TCErrorCode code_return;
 
         if(x_len > CutOffSize)
-        {   // For large sample use approximation 
+        {   
             code_return = mw_test_prob_long<T>(xvec, x_len, yvec, y_len, &u_stat, &val);
             if (TCError::IsErrorImpl<T>::run(&val))
             {
@@ -560,17 +560,17 @@ namespace Inference
             }
             switch(testtype)
             {
-            case 1:  // Left tail
+            case 1:  
                 {
                     *p_value = val;
                     break;
                 }
-            case 2:  // Two tail
+            case 2:  
                 {
                     *p_value = (val > .5 ? 2.*(1. - val) : 2.*val);
                     break;
                 }
-            case 3:  // Right tail
+            case 3:  
                 {
                     *p_value = 1. - val;
                     break;
@@ -583,7 +583,7 @@ namespace Inference
             *u_statistic = u_stat;
         }
         else
-        {   // For small sample use exact distribution
+        {   
             code_return = mw_test_prob_short<T>(xvec, x_len, yvec, y_len, testtype, &u_stat, &val);
             if (TCError::IsErrorImpl<T>::run(&val))
             {

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "TCArrayUtils.h"
@@ -108,7 +108,7 @@ TCErrorCode  fisher_test_body(const TCArray* sample, TCHypothesis type, T2* p_va
 
     if (OneTailLT == type)
     {
-        if (0 == fd1)  // this case is out of Hypgeom spec
+        if (0 == fd1)  
         {
             pres = 1.;
         }
@@ -134,7 +134,7 @@ TCErrorCode  fisher_test_body(const TCArray* sample, TCHypothesis type, T2* p_va
     }
     else if (TwoTail == type)
     {
-        if (0 == fd1)  // this case is out of Hypgeom spec
+        if (0 == fd1)  
         {
             pres = 1.;
         }

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -43,7 +43,7 @@ namespace Smoothing {
 		for (TCUInt64 i = l; i <= r; i++) {
 			if (TCError::IsMissingImpl<T>::run(&x[i])) 
 			{
-				*s = _get_tc_error<T>(TCError_IllegalInput); //NaN in case of missing value;
+				*s = _get_tc_error<T>(TCError_IllegalInput); 
 				return 0;
 			}
 
@@ -66,8 +66,8 @@ namespace Smoothing {
 				*is_missing = 1;
 				return;
 			}
-			//Check: inf in input data
-			//Check: NaN in input data
+			
+			
 			if (Utils::isinf(x[i]) || Utils::isnan(x[i])) 
 			{
 				*is_inf_nan = 1;
@@ -84,7 +84,7 @@ namespace Smoothing {
 		TCUInt64 weights_sum = 0;
 		if (n + offset + lag_size + 1 < window_length || n >= data_length - offset + lead_size) 
 		{
-			*tma = _get_tc_error<T>(TCError_IllegalInput); //NaN in case previous data is undefined
+			*tma = _get_tc_error<T>(TCError_IllegalInput); 
 			return;
 		}
 
@@ -129,13 +129,13 @@ namespace Smoothing {
 		TCUInt64 offset;
 		
 		TCSize_t n = data_series->m_numelt;
-		//Check: Empty data series
+		
 		if (n == 0) 
 		{
 			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(DataSeriesArg));
 		}
 
-		//Check: Window length is less than or equal to zero. type is unsigned
+		
 		if (window_length == 0)
 		{
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(WindowLengthArg));
@@ -146,9 +146,9 @@ namespace Smoothing {
 			foffset = 0.0;
 		} else if (Utils::isinf(foffset) || Utils::isinf(foffset) || foffset < 0)
 		{
-			//Check: ±Inf in the offset
-			//Check: Error NaN in the offset
-			//Check: Offset is negative value
+			
+			
+			
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(OffsetArg));
 		}
 
@@ -160,7 +160,7 @@ namespace Smoothing {
 
 		offset = (TCUInt64) foffset;
 
-		//Check: Offset is greater or equal to window length
+		
 		if (offset >= window_length) 
 		{
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(OffsetArg));
@@ -169,13 +169,13 @@ namespace Smoothing {
 		TCSize_t v_count;
 		TCSize_t data_length;
 
-		//Check: Data series array has illegal dimension type (not one-dimensional and not two-dimensional)
+		
 		if (!dim_analysis(data_series, &data_length, &v_count)) 
 		{
-			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(DataSeriesArg)); //Error when shape is illegal
+			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(DataSeriesArg)); 
 		} 
 
-		//Check: Window length is greater than data series length
+		
 		if (window_length > data_length) 
 		{
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(WindowLengthArg));
@@ -184,13 +184,13 @@ namespace Smoothing {
 		TCSize_t lag_v_count;
 		TCSize_t lag_length;
 
-		//Check: External data lag is not empty but has dimension type different from data series dimension type
+		
 		if (!dim_analysis(external_data_lag, data_series->m_ndims, &lag_length, &lag_v_count) && external_data_lag->m_numelt > 0) 
 		{
 			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(ExternalDataLagArg));
 		} 
 
-		//Check: External data lag is not empty but columns count is not equal to data series columns count in two-dimensional case
+		
 		if (external_data_lag->m_numelt > 0 && v_count != lag_v_count)
 		{
 			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(ExternalDataLagArg));
@@ -199,19 +199,19 @@ namespace Smoothing {
 		TCSize_t lead_v_count;
 		TCSize_t lead_length;
 
-		//Check: External data lead is not empty but has dimension type different from data series dimension type
+		
 		if (!dim_analysis(external_data_lead, data_series->m_ndims, &lead_length, &lead_v_count) && external_data_lead->m_numelt > 0) 
 		{
-			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(ExternalDataLeadArg)); //Error when lag shape is illegal
+			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(ExternalDataLeadArg)); 
 		} 
 
-		//Check: External data lead is not empty but columns count is not equal to data series columns count in two-dimensional case
+		
 		if (external_data_lead->m_numelt > 0 && v_count != lead_v_count)
 		{
 			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(ExternalDataLeadArg));
 		}
 
-		//Check: another checks are in calculation
+		
 		T* data = (T*) data_series->m_data;
 		T* lag = (T*) external_data_lag->m_data;
 		T* lead = (T*) external_data_lead->m_data;
@@ -219,7 +219,7 @@ namespace Smoothing {
 		TCBool is_inf_nan;
 		TCBool is_missing;
 
-		//Check: InfNan
+		
 		check_mis_inf_nan<T>(data, data_series->m_numelt, &is_inf_nan, &is_missing);
 		if (is_inf_nan) {
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(DataSeriesArg));

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "mw_test.h"
@@ -48,7 +48,7 @@ TCErrorCode stats_inference_mw_test(TCArray* sample1, TCArray* sample2, TCHypoth
     {
         return tcerror_code_new(TCError_IllegalSize, 2);
     }
-    // Sort and check for errors
+    
     code_return = mw_do_sort<T>(sample1);
     if (code_return != code_ok)
     {
@@ -73,7 +73,7 @@ TCErrorCode stats_inference_mw_test(TCArray* sample1, TCArray* sample2, TCHypoth
     {
         return code_return;
     }
-    // X should be the smallest
+    
     if (x_len <= y_len)
     {
         code_return = stats_mw_test<T>(xvec, x_len, yvec, y_len, testtype, p_value, u_statistic);

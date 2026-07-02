@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -26,14 +26,14 @@ struct interquartile_dist_t : public Sort::operator_temp_copy_t<T>
             return err;
         }
         T* data = state.data();
-        // check for meta-numeric values
+        
         for (TCSize_t i = 0; i < nelem; i++ )
         {
             T v = data[i];
-            // don't allow qnans to qsel, missings already filtered in the outer loop
+            
             if(TCError::IsErrorImpl<T>::run(&v))
             {
-                result = v; // propagate error
+                result = v; 
                 return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
             }
         }
@@ -42,10 +42,10 @@ struct interquartile_dist_t : public Sort::operator_temp_copy_t<T>
             result = 0;
             return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
         }
-        // data elements are reordered after first quickselect call
+        
         T quartile1, quartile3;
-        TCSize_t q1_pos = (nelem - 1); // /4;
-        TCSize_t q3_pos = 3 * (nelem - 1); // /4;
+        TCSize_t q1_pos = (nelem - 1); 
+        TCSize_t q3_pos = 3 * (nelem - 1); 
         switch (q1_pos & 3)
         {
         case 0:

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -62,8 +62,8 @@ namespace Descriptive
             return tcerror_code_new(TCError_IllegalInput, TCArgumentID(1));
         }
 
-        // Check if the input array is length zero in the direction to be
-        // reduced. If it is, return a TCError_IllegalSize error.
+        
+        
         if (numbers->m_dims[dim-1] == 0)
         {
             return tcerror_code_new(TCError_IllegalSize, 1);
@@ -77,8 +77,8 @@ namespace Descriptive
     template <typename T>
     TCErrorCode stats_redall_geomean(const TCArray* numbers, const TCSize_t narrays, T* mean)
     {
-        // Check if the input arrays are all zero length. If they are, return
-        // a TCError_IllegalSize error.
+        
+        
         bool bHasInput = false;
         for (TCSize_t arrayId = 0; arrayId < narrays; arrayId ++)
         {
@@ -154,8 +154,8 @@ namespace Descriptive
             return tcerror_code_new(TCError_IllegalInput, TCArgumentID(1));
         }
 
-        // Check if the input array is length zero in the direction to be
-        // reduced. If it is, return a TCError_IllegalSize error.
+        
+        
         if (numbers->m_dims[dim-1] == 0)
         {
             return tcerror_code_new(TCError_IllegalSize, 1);
@@ -169,8 +169,8 @@ namespace Descriptive
     template <typename T>
     TCErrorCode stats_redall_harmean(const TCArray* numbers, const TCSize_t narrays, T* mean)
     {
-        // Check if the input arrays are all zero length. If they are, return
-        // a TCError_IllegalSize error.
+        
+        
         bool bHasInput = false;
         for (TCSize_t arrayId = 0; arrayId < narrays; arrayId ++)
         {

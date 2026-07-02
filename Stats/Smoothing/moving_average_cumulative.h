@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -30,24 +30,24 @@ namespace Smoothing {
 		TCUInt64 external_cma_length,
 		TCArray* cma_series)
 	{
-		//Check: Data series is empty
+		
 		TCSize_t n = data_series->m_numelt;
 		if (n == 0) 
 		{
 			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(CmaDataSeriesArg));
 		}
 
-		//Check: Data series array has illegal shape (not one-dimensional and not two-dimensional)
+		
 		TCSize_t v_count;
 		TCSize_t data_length;
 
 		if (!dim_analysis(data_series, &data_length, &v_count)) 
 		{
-			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(CmaDataSeriesArg)); //Error when shape is illegal
+			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(CmaDataSeriesArg)); 
 		} 
 
-		//Check: +-Inf is value of external.cma.value
-		//Check: Error NaN is value of external.cma.value
+		
+		
 		ValueType externalValueType = value_type(external_cma_value);
 
 		if (externalValueType == ErrorValue || externalValueType == InfValue)
@@ -55,7 +55,7 @@ namespace Smoothing {
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(CmaExternalCmaValue));
 		}
 
-		//Check: external.cma.value is given but external.cma.length is zero
+		
 		if (externalValueType == ActualValue && external_cma_length == 0)
 		{
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(EmaExternalCmaLength));
@@ -64,7 +64,7 @@ namespace Smoothing {
 		const T* data = (T*)data_series->m_data;
 		T* cma_data = (T*) cma_series->m_data;
 		
-		//cycle through columns
+		
 		for (TCSize_t v = 0; v < v_count; v++)
 		{
 			const T* begin = data + v * data_length;
@@ -83,7 +83,7 @@ namespace Smoothing {
 				denominator = 0;
 			}
 
-			//process data in a single column
+			
 			for (auto p = begin; p != end; )
 			{
 				ValueType type = value_type(*p);

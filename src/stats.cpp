@@ -38,7 +38,7 @@ std::string json_number(double value)
     return out.str();
 }
 
-} // namespace
+} 
 
 double mean(const std::vector<double>& values)
 {
@@ -533,4 +533,4 @@ std::string to_json(const std::vector<Outlier>& values)
     return out.str();
 }
 
-} // namespace olympcore
+} 

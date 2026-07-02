@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -80,7 +80,7 @@ namespace Dist
             
             return Utils::exp(-2 * z2);
         }
-    }; // class KSOneSided
+    }; 
 
     template <typename T>
     class KSTwoSided
@@ -145,7 +145,7 @@ namespace Dist
                 return 2 * Utils::pow(1 - x, n);
             }
 
-            // We can't come here
+            
             return TCError::NewErrorImpl<T>::run(tcerror_code_new(TCError_IllegalInput, TCArgPosition_UnKnown));
         }
 
@@ -291,7 +291,7 @@ namespace Dist
             std::vector<T> H(m * m);
             std::vector<T> Q(m * m);
                 
-            // Form matrix H
+            
             for (TCSSize_t i = 0; i < (TCSSize_t)m; i++)
             {
                 for (TCSSize_t j = 0; j < (TCSSize_t)m; j++)
@@ -442,5 +442,5 @@ namespace Dist
 
             return 1. - sum;
         }
-    }; // class KSTwoSided
-} // namespace Dist
+    }; 
+} 

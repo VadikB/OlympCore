@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -74,8 +74,8 @@ namespace Dist
                 return T(0.0);
             }
 
-            //gamma function is more precise than beta function
-            //hence using gamma for lower ULP
+            
+            
             T ret = Utils::pow(x, alpha - T(1.0)) * Utils::pow(T(1.0) - x, beta - T(1.0))
                 * Utils::gamma(alpha + beta) / Utils::gamma(alpha) / Utils::gamma(beta);
 

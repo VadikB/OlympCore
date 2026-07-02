@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -32,7 +32,7 @@ namespace Dist
             {
                 return TCError::NewError<T>(probability, TCFuncId_NORM_S_INV, TCArgPosition_1, TCError_IllegalInput);
             }
-            // return Utils::sqrt(T(2.0)) * Utils::erfinv(T(2.0)*probability - T(1.0));
+            
             return -Utils::sqrt(T(2.0)) * Utils::erfcinv(T(2.0)*probability);
         }
     };

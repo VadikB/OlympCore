@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 
@@ -30,17 +30,17 @@ static int rand_ziggurat_norm(int method, TCRNGStatePtr state, int count, T* ptr
     static T wn[128], fn[128];
     static bool initialized=false;
 
-    int _rand[RNG_BUFFER_SIZE]; // for RNG_NEXT
+    int _rand[RNG_BUFFER_SIZE]; 
     int _current_rnd = -1;
 
-    method; // unreferenced parameter
+    method; 
 
     if(!initialized)
     {
         const T m1 = 2147483648.0;
         T dn = 3.442619855899, tn = dn, vn = 9.91256303526217e-3;
         
-        // init the tables
+        
         T q = vn/std::exp(-.5*dn*dn);
         kn[0] = (unsigned)((dn/q)*m1);
         kn[1] = 0;
@@ -73,7 +73,7 @@ static int rand_ziggurat_norm(int method, TCRNGStatePtr state, int count, T* ptr
             x = hz*wn[iz];
             if ((unsigned)std::abs(hz) < kn[iz])
                 break;
-            if (iz == 0) // iz==0, handles the base strip
+            if (iz == 0) 
             {
                 do
                 {
@@ -82,20 +82,20 @@ static int rand_ziggurat_norm(int method, TCRNGStatePtr state, int count, T* ptr
                     x = (unsigned)temp*rng_flt;
                     RNG_NEXT(temp, state);
                     y = (unsigned)temp*rng_flt;
-                    x = (T)(-std::log(x+FLT_MIN)*0.2904764); // .2904764 is 1/r
+                    x = (T)(-std::log(x+FLT_MIN)*0.2904764); 
                     y = (T)-std::log(y+FLT_MIN);
                 } while( y + y < x*x );
                 x = hz >= 0 ? r + x : -(r + x);
                 break;
             }
-            // iz > 0, handle the wedges of other strips
+            
             int temp;
             RNG_NEXT(temp, state);
             y = (unsigned)temp*rng_flt;
             if(fn[iz] + y*(fn[iz - 1] - fn[iz]) < std::exp(-.5*x*x))
                 break;
         }
-        // rescale and save to buffer
+        
         ptr[i] = x * sigma + mean;
     }
     return VSL_ERROR_OK;

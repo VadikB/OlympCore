@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -16,7 +16,7 @@ namespace Utilities
     {
         static __inline TCErrorCode Permute(TCRNGStatePtr state, const TCSize_t n, T *x)
         {
-            // Initialize the array
+            
             for (TCSize_t i = 0; i < n; i++)
             {
                 x[i] = i + 1;
@@ -25,7 +25,7 @@ namespace Utilities
             std::vector<double> rand_seq(n);
             TCSize_t count = n;
             double *ptr = rand_seq.data();
-            // Generate random number sequence in chunks if n is larger than MAX_INT32
+            
             while(count > 0)
             {
                 TCSize_t sz = std::min<TCSize_t>(count, std::numeric_limits<int>::max());
@@ -38,7 +38,7 @@ namespace Utilities
                 ptr += sz;
             }
 
-            // Permute the array
+            
             ptr = rand_seq.data();
             for (TCSize_t k = 0, i = n - 1, j; i > 0; i--, k++)
             {

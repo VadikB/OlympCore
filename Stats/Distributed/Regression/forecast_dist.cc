@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 #include "TCReduceDist.h"
 #include "OlympCoreDist.h"
 #include "regression_dist.h"
@@ -33,7 +33,7 @@ TCErrorCode math_desc_forecast(TCDistArray *x, TCDistArray *known_ys, TCDistArra
 
     reduce2arrays_op(count_t<T>(), x_local->m_numelt,
         (T*)x_local->m_data, (T*)y_local->m_data, 
-        tc_static_cast<T>(0), tc_static_cast<T>(0), tc_static_cast<T>(0)/*value_init*/, &count,
+        tc_static_cast<T>(0), tc_static_cast<T>(0), tc_static_cast<T>(0), &count,
         (MPI_Comm)known_xs->m_Layout.m_Comm, ALL_RANKS, MPI_SUM);
 
     if(number(count) < 2)
@@ -43,13 +43,13 @@ TCErrorCode math_desc_forecast(TCDistArray *x, TCDistArray *known_ys, TCDistArra
 
     reduce2arrays_op(sum2_kahan_t<T>(), x_local->m_numelt, 
         (T*)x_local->m_data, (T*)y_local->m_data, 
-        tc_static_cast<T>(0), tc_static_cast<T>(0), tc_static_cast<T>(0)/*value_init*/, &mean_x,
+        tc_static_cast<T>(0), tc_static_cast<T>(0), tc_static_cast<T>(0), &mean_x,
         (MPI_Comm)known_xs->m_Layout.m_Comm, ALL_RANKS, MPI_SUM);
     mean_x /= count;
 
     reduce2arrays_op(sum2_kahan_t<T>(), x_local->m_numelt, 
         (T*)y_local->m_data, (T*)x_local->m_data, 
-        tc_static_cast<T>(0), tc_static_cast<T>(0), tc_static_cast<T>(0)/*value_init*/, &mean_y,
+        tc_static_cast<T>(0), tc_static_cast<T>(0), tc_static_cast<T>(0), &mean_y,
         (MPI_Comm)known_xs->m_Layout.m_Comm, ALL_RANKS, MPI_SUM);
     mean_y /= count;
 
@@ -57,12 +57,12 @@ TCErrorCode math_desc_forecast(TCDistArray *x, TCDistArray *known_ys, TCDistArra
 
     reduce2arrays_op(sum2sqr_kahan_t<T>(), x_local->m_numelt, 
         (T*)x_local->m_data, (T*)y_local->m_data, 
-        mean_x, tc_static_cast<T>(0), tc_static_cast<T>(0)/*value_init*/, &xx,
+        mean_x, tc_static_cast<T>(0), tc_static_cast<T>(0), &xx,
         (MPI_Comm)known_xs->m_Layout.m_Comm, ALL_RANKS, MPI_SUM);
 
     reduce2arrays_op(sum2mult_kahan_t<T>(), x_local->m_numelt, 
         (T*)x_local->m_data, (T*)y_local->m_data, 
-        mean_x, mean_y, tc_static_cast<T>(0)/*value_init*/, &xy,
+        mean_x, mean_y, tc_static_cast<T>(0), &xy,
         (MPI_Comm)known_xs->m_Layout.m_Comm, ALL_RANKS, MPI_SUM);
             
     T a, b;

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -73,7 +73,7 @@ namespace Descriptive
     template <typename T>
     TCErrorCode stats_redall_moment_central(const TCArray* numbers, const TCSize_t narrays, const TCSize_t order, T* mu_central)
     {
-        // Check empty input arrays and return a TCError_IllegalSize error when it applies.
+        
         bool noInput = true;
         TCSize_t arrayId = 0;
         while (noInput && arrayId < narrays)
@@ -104,7 +104,7 @@ namespace Descriptive
         
         assert(dim > 0 && dim <= numbers->m_ndims);
         
-        // Check empty input array in the reduction direction and return an error when it applies.
+        
         if (numbers->m_dims[dim-1] == 0)
         {
             return tcerror_code_new(TCError_IllegalSize, 1);

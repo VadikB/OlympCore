@@ -1,15 +1,15 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "chisq.h"
 
 using namespace Dist;
 
-///////////////////////////////////////////////////////////
-// CHISQ.DIST
-///////////////////////////////////////////////////////////
+
+
+
 TCDouble stats_dist_chisq_d(const TCDouble x, const TCDouble deg_freedom, const TCBool cumulative)
 {
     if (cumulative)
@@ -35,9 +35,9 @@ TCFloat stats_dist_chisq_f(const TCFloat x, const TCFloat deg_freedom, const TCB
 }
 
 
-///////////////////////////////////////////////////////////
-// CHISQ.INV
-///////////////////////////////////////////////////////////
+
+
+
 TCDouble stats_dist_inv_chisq_d(const TCDouble probability, const TCDouble deg_freedom)
 {
     return Chisq<TCDouble>::InvCDF(probability, deg_freedom);
@@ -49,9 +49,9 @@ TCFloat stats_dist_inv_chisq_f(const TCFloat probability, const TCFloat deg_free
 }
 
 
-///////////////////////////////////////////////////////////
-// CHISQ.DIST.RT
-///////////////////////////////////////////////////////////
+
+
+
 TCDouble stats_dist_rt_chisq_d(const TCDouble x, const TCDouble deg_freedom)
 {
     return Chisq<TCDouble>::RT(x, deg_freedom);
@@ -63,9 +63,9 @@ TCFloat stats_dist_rt_chisq_f(const TCFloat x, const TCFloat deg_freedom)
 }
 
 
-///////////////////////////////////////////////////////////
-// CHISQ.INV.RT
-///////////////////////////////////////////////////////////
+
+
+
 TCDouble stats_dist_inv_rt_chisq_d(const TCDouble probability, const TCDouble deg_freedom)
 {
     return Chisq<TCDouble>::InvRT(probability, deg_freedom);

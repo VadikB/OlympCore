@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -32,13 +32,13 @@ namespace Dist
             T result = 0;
             T t = 0;
 
-            //all the inputs must be numbers: probability, location, scale, shape
+            
             BAIL_ON_NAN(probability, result);
             BAIL_ON_NAN(location, result);
             BAIL_ON_NAN(scale, result);
             BAIL_ON_NAN(shape, result);
 
-            //location/scale/shape must be finite
+            
             if ( Utils::isinf(location) )
             {
                 result = TCError::NewError<T>(location,  TCFuncId_GEV_INV, TCArgPosition_2, TCError_IllegalInput);
@@ -57,14 +57,14 @@ namespace Dist
                 BAIL();
             }
 
-            //scale must be positive
+            
             if (scale <= 0)
             {
                 result = TCError::NewError<T>(scale,  TCFuncId_GEV_INV, TCArgPosition_3, TCError_IllegalInput);
                 BAIL();
             }
 
-            //probability must be between 0 and 1
+            
             if (probability < 0 || probability > 1)
             {
                 result = Utils::quiet_NaN<T>();
@@ -107,13 +107,13 @@ namespace Dist
             T product = 0;
             T temp = 0;
 
-            //all the inputs must be numbers: x, location, scale, shape
+            
             BAIL_ON_NAN(x, result);
             BAIL_ON_NAN(location, result);
             BAIL_ON_NAN(scale, result);
             BAIL_ON_NAN(shape, result);
 
-            //location/scale/shape must be finite
+            
             if ( Utils::isinf(location) )
             {
                 result = TCError::NewError<T>(location,  TCFuncId_GEV_DIST, TCArgPosition_2, TCError_IllegalInput);
@@ -132,14 +132,14 @@ namespace Dist
                 BAIL();
             }
 
-            //scale must be positive
+            
             if (scale <= 0)
             {
                 result = TCError::NewError<T>(scale,  TCFuncId_GEV_DIST, TCArgPosition_3, TCError_IllegalInput);
                 BAIL();
             }
 
-            //compute intermediate value t
+            
             normalized_x = (x-location)/scale;
             if (0 == shape)
             {
@@ -151,11 +151,11 @@ namespace Dist
                 t = Utils::pow (1 + shape * normalized_x, - 1/shape);
             }
 
-            //compute result
+            
             boundary = location - scale/shape;
-            //boundary = location - shape/scale;
+            
 
-            if (stats_enum_dist_pdf == type)  //pdf
+            if (stats_enum_dist_pdf == type)  
             {
                 if (shape < 0)
                 {
@@ -163,7 +163,7 @@ namespace Dist
                     {
                         result = 0;
                     }
-                    else if (Utils::isinf(x)) //special handling for inf values as the equation below may not generate the desired results
+                    else if (Utils::isinf(x)) 
                     {
                         result = 0;
                     }
@@ -190,16 +190,16 @@ namespace Dist
                             {
                                 lnt = - 1/shape * Utils::log1p (product);
                             }
-                            //t = Utils::pow (1 + shape * normalized_x, - 1/shape);
+                            
                             t = Utils::exp(lnt);
 
                             logresult = - Utils::log(scale) + (shape + 1)* lnt -t;
                             result = Utils::exp(logresult);
-                            //result = 1/scale * Utils::pow(t, shape + 1) * Utils::exp(-t);
+                            
                         }
                         else
                         {
-                            //break down normalized_x
+                            
                             product = (shape * x - shape * location)/scale;
 
                             if (Utils::isinf(shape * x) && Utils::isinf(shape * location) && Utils::isnan(product) )
@@ -222,7 +222,7 @@ namespace Dist
                                 lnt = - 1/shape * Utils::log1p (product);
                             }
 
-                            //if lnt is inf, t is also inf and t dominates lnt
+                            
                             if (lnt > 0 && Utils::isinf(lnt))
                             {
                                 result = 0.0;
@@ -240,13 +240,13 @@ namespace Dist
                 
                 else if ( 0 == shape )
                 {
-                    if (Utils::isinf(x)) //special handling for inf values as the equation below may not generate the desired results
+                    if (Utils::isinf(x)) 
                     {
                         result = 0;
                     }
                     else
                     {
-                        //t is inf, exp(-t) dominates pow(t, shape+1)
+                        
                         if (t > 0 && Utils::isinf(t) )
                         {
                             result = 0.00;
@@ -288,16 +288,16 @@ namespace Dist
                             {
                                 lnt = - 1/shape * Utils::log1p (product);
                             }
-                            //t = Utils::pow (1 + shape * normalized_x, - 1/shape);
+                            
                             t = Utils::exp(lnt);
 
                             logresult = - Utils::log(scale) + (shape + 1)* lnt -t;
                             result = Utils::exp(logresult);
-                            //result = 1/scale * Utils::pow(t, shape + 1) * Utils::exp(-t);
+                            
                         }
                         else
                         {
-                            //break down normalized_x
+                            
                             product = (shape * x - shape * location)/scale;
 
                             if (Utils::isinf(shape * x) && Utils::isinf(shape * location) && Utils::isnan(product) )
@@ -327,8 +327,8 @@ namespace Dist
                         }
                     }
                 }
-            } //end of pdf
-            else //cdf
+            } 
+            else 
             {
                 assert (stats_enum_dist_cdf == type);
 
@@ -351,7 +351,7 @@ namespace Dist
                 {
                     assert (0 != shape);
                     
-                    //normalized_x is inf, and this inf comes from x-location = inf. In this case, if x/scale - location/scale is not inf/nan, then it can be used
+                    
                     if (
                         Utils::isinf(normalized_x) 
                         && Utils::isinf(x-location) 
@@ -365,7 +365,7 @@ namespace Dist
 
                     if (Utils::isinf(normalized_x))
                     {
-                        //break down normalized_x
+                        
                         product = (shape * x - shape * location)/scale;
 
                         if (Utils::isinf(shape * x) && Utils::isinf(shape * location) && Utils::isnan(product) )
@@ -441,7 +441,7 @@ namespace Dist
                         result = Utils::exp(-t);
                     }
                 }
-            }  //end of cdf
+            }  
 
         exitlabel:
             return result;

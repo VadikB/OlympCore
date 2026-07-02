@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -61,7 +61,7 @@ namespace Dist
                 return TCError::NewError<T>(trials, TCFuncId_BINOM_DIST, TCArgPosition_2, TCError_IllegalInput);
             }
 
-            // At this point probability_s must not be in [0, 1].
+            
             assert(probability_s < 0 || probability_s > 1);
             return TCError::NewError<T>(probability_s, TCFuncId_BINOM_DIST, TCArgPosition_3, TCError_IllegalInput);
         }
@@ -108,7 +108,7 @@ namespace Dist
                 {
                     return number_s == 0;
                 }
-                else // probability_s == 1
+                else 
                 {
                     return ntrials == number_s;
                 }
@@ -132,7 +132,7 @@ namespace Dist
                 return TCError::NewError<T>(trials, TCFuncId_BINOM_DIST, TCArgPosition_2, TCError_IllegalInput);
             }
 
-            // At this point, probability_s must not be in [0, 1].
+            
             assert(probability_s < 0 || probability_s > 1);
             return TCError::NewError<T>(probability_s, TCFuncId_BINOM_DIST, TCArgPosition_3, TCError_IllegalInput);
         }
@@ -177,7 +177,7 @@ namespace Dist
                 return TCError::NewError<T>(trials, TCFuncId_BINOM_INV, TCArgPosition_1, TCError_IllegalInput);
             }
 
-            // At this point, probability_s must not be in [0, 1].
+            
             assert(probability_s < 0 || probability_s > 1);
             return TCError::NewError<T>(probability_s, TCFuncId_BINOM_INV, TCArgPosition_2, TCError_IllegalInput);
         }
@@ -185,17 +185,17 @@ namespace Dist
     private:
         Binom();
 
-        // Compute n! using gammaln.
+        
         static T GammaFact(const T n)
         {
             return Utils::gammaln(n+1);
         }
 
-        // Returns the next lowest floating point value that is valid in the
-        // discrete bisection search. The discrete bisection considers only
-        // integer values, so when the input argument is small enough this
-        // function returns in-1. When the input argument is so large that
-        // in+1 == in, this function returns in-eps(in).
+        
+        
+        
+        
+        
         static T NextLower(const T in)
         {
             const T inEps = eps(in);

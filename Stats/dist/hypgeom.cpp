@@ -1,13 +1,13 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "Hypgeom.h"
 
 using namespace Dist;
 
-// C interface functions
+
 TCDouble stats_dist_hypgeom_d(const TCDouble sample_s, const TCDouble number_sample, const TCDouble population_s, const TCDouble number_population, const TCBool cumulative)
 {
     if (cumulative)

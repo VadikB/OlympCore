@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 #pragma once
 
 #include "OlympCoreUtils.h"
@@ -13,10 +13,10 @@ class Rayleigh
 public:
     static T PDF(const T x, const T scale) 
     {
-        // Compute for valid inputs
-        if (scale > 0 && !Utils::isinf(scale))                  // propagate x == NaN
+        
+        if (scale > 0 && !Utils::isinf(scale))                  
         {
-            if (x <= 0 || Utils::isinf(x))                      // handle special inputs
+            if (x <= 0 || Utils::isinf(x))                      
             {
                 return 0;
             }
@@ -31,21 +31,21 @@ public:
             return probability;
         }
 
-        // Check for NaN inputs
+        
         if (Utils::isnan(scale))    return scale;
         if (Utils::isnan(x))        return x;
         
-        // Check for Out-of-domain inputs   
-        assert(scale <= 0 || Utils::isinf(scale));              // scale <= T(0) || Utils::isinf(scale)
+        
+        assert(scale <= 0 || Utils::isinf(scale));              
         return TCError::NewError<T>(scale,  TCFuncId_RAYLEIGH_DIST, TCArgPosition_2, TCError_IllegalInput);
     }
 
     static T CDF(const T x, const T scale) 
     {
-        // Compute for valid inputs
-        if (scale > 0 && !Utils::isinf(scale))                  // propagate x == NaN
+        
+        if (scale > 0 && !Utils::isinf(scale))                  
         {
-            if (x <= 0)                      // handle special inputs
+            if (x <= 0)                      
             {
                 return 0;
             }
@@ -54,35 +54,35 @@ public:
             return probability;
         }
 
-        // Check for NaN inputs
+        
         if (Utils::isnan(scale))    return scale;
         if (Utils::isnan(x))        return x;
         
-        // Check for Out-of-domain inputs   
-        assert(scale <= 0 || Utils::isinf(scale));              // scale <= T(0) || Utils::isinf(scale)
+        
+        assert(scale <= 0 || Utils::isinf(scale));              
         return TCError::NewError<T>(scale,  TCFuncId_RAYLEIGH_DIST, TCArgPosition_2, TCError_IllegalInput);
     }
 
     static T InvCDF(const T x, const T scale) 
     {
-        // Compute for valid inputs
-        if (x >= 0 && x <= 1 && scale > 0 && !Utils::isinf(scale))                  // propagate x == NaN
+        
+        if (x >= 0 && x <= 1 && scale > 0 && !Utils::isinf(scale))                  
         {
             const T probability = scale * Utils::sqrt(-T(2) * Utils::log1p(-x));
             return probability;
         }
 
-        // Check for NaN inputs
+        
         if (Utils::isnan(scale))    return scale;
         if (Utils::isnan(x))        return x;
         
-        // Check for Out-of-domain inputs  
+        
         if (x < 0 || x > 1)
         {
             return TCError::NewError<T>(x,  TCFuncId_RAYLEIGH_INV, TCArgPosition_1, TCError_IllegalInput);
         }
-        assert(scale <= 0 || Utils::isinf(scale));              // scale <= T(0) || Utils::isinf(scale)
+        assert(scale <= 0 || Utils::isinf(scale));              
         return TCError::NewError<T>(scale,  TCFuncId_RAYLEIGH_INV, TCArgPosition_2, TCError_IllegalInput);
     }
-};      // class Rayleigh
-}       // namespace Dist
+};      
+}       

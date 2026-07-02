@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 void GetRankWithLocal(TCDistArray *known, TCSize_t *rank, TCSize_t *ir);
 MPI_Datatype GetType(TCDistArray *known_xs);

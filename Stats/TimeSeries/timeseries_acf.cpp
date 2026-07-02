@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "TCArrayUtils.h"
@@ -45,7 +45,7 @@ TCErrorCode acf_body(In TCArray* y_, TCArray* r, TCArray* stddev, T* q, T* mq)
     TCSize_t ny = y->m_numelt;
     TCSize_t nr = r->m_numelt;
     T  tref;
-//    IppStatus ippstatus;
+
     T* py = ((T*)y->m_data);
     T* pr = ((T*)r->m_data);
     T* pdev = ((T*)stddev->m_data);
@@ -71,7 +71,7 @@ TCErrorCode acf_body(In TCArray* y_, TCArray* r, TCArray* stddev, T* q, T* mq)
     {
         return tcerror_code_new(TCError_IllegalSize, 2);
     }
-    // count leading missings
+    
     m = 0;
     for (i = 0; i < ny; i++)
     {

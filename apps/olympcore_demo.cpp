@@ -39,7 +39,7 @@ std::size_t to_size(const char* text)
     return static_cast<std::size_t>(value);
 }
 
-} // namespace
+} 
 
 int main(int argc, char** argv)
 {

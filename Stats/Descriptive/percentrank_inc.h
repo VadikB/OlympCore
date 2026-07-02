@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -28,18 +28,18 @@ struct percentrank_inc_t
 
     typedef struct
     {
-        TCSize_t below_count;   // count(y): y < x
-        TCSize_t above_count;   // count(y): y > x
-        T below_value;          // max(y): y < x
-        T above_value;          // min(y): y >= x
+        TCSize_t below_count;   
+        TCSize_t above_count;   
+        T below_value;          
+        T above_value;          
         T error;
     }
     T_state;
 
     inline TCErrorID InitState(T_state& state, TCSize_t nelem)
     {
-        state; // unreferenced parameter
-        nelem; // unreferenced parameter
+        state; 
+        nelem; 
         return TCError_NoError;
     }
     inline void ProcessFirst(T_state& state, T& x)
@@ -53,7 +53,7 @@ struct percentrank_inc_t
     }
     inline void Process(T_state& state, T& x, TCSize_t index)
     {
-        index; // unreferenced parameter
+        index; 
         if (!(state.error == 0))
         {
             return;
@@ -102,7 +102,7 @@ struct percentrank_inc_t
             result = state.error;
             return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
         }
-        T d = 1; // 1...nelem
+        T d = 1; 
         if (state.below_count > 0)
         {
             if (value == state.above_value)

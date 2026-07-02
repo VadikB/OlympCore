@@ -63,4 +63,4 @@ std::string to_json(const RegressionResult& regression);
 std::string to_json(const std::vector<double>& values);
 std::string to_json(const std::vector<Outlier>& values);
 
-} // namespace olympcore
+} 

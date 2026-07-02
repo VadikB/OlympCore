@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -84,9 +84,9 @@ namespace Descriptive
 
             const TCArray *localData = &data->m_LocalArray;
 
-            //create new comm
-            MPI_Comm comm; //new communicator
-            int color = (localData->m_numelt != 0 ? 0 : MPI_UNDEFINED); //include ranks with data only
+            
+            MPI_Comm comm; 
+            int color = (localData->m_numelt != 0 ? 0 : MPI_UNDEFINED); 
             MPI_Comm_split(comm_tmp, color, rank, &comm);
             if (MPI_COMM_NULL == comm) return tcerror_code_new(TCError_NoError, TC_UNSPECIFIED_ARGID);
 
@@ -108,7 +108,7 @@ namespace Descriptive
             {
                 AnovaSingle<T>::ComputeSumCount(localData, dim, s_cnt_local_data, s_sum_local_data, &sum, &cnt, &maxVal);
 
-                //get global sum, cnt and maxVal
+                
                 getGlobalSumCount(comm, &sum, &cnt, &maxVal);
 
                 avg = sum / cnt;
@@ -129,18 +129,18 @@ namespace Descriptive
 
                 AnovaSingle<T>::ComputeSumCount(localData, dim, &s_cnt_local_tmp[0], &s_sum_local_tmp[0], &sum, &cnt, &maxVal);
 
-                //MPI_LONG_LONG_INT is incorrect, should be MPI_UNSIGNED_LONG_LONG but it doesn't work
+                
                 MPI_Allreduce(&s_cnt_local_tmp[0], &s_cnt_global[0], outputSize, MPI_LONG_LONG_INT, MPI_SUM, comm);
                 MPI_Allreduce(&s_sum_local_tmp[0], &s_sum_global[0], outputSize, MPI_Type<T>::mpi_type(), MPI_SUM, comm);
 
-                //get global cnt, avg and maxVal
+                
                 getGlobalSumCount(comm, &sum, &cnt, &maxVal);
 
                 avg = sum / cnt;
 
                 AnovaSingle<T>::ComputeAvgVarSS(localData, dim, &s_cnt_global[0], &s_sum_global[0], &s_avg_global[0], &s_var_local_tmp[0], avg, ssb, ssw, badDistribution);
 
-                //need to calculate variance
+                
                 MPI_Reduce(&s_var_local_tmp[0], s_var_local_data, outputSize, MPI_Type<T>::mpi_type(), MPI_SUM, MASTER_RANK, comm);
                    
                 if (MASTER_RANK == rank)
@@ -179,7 +179,7 @@ namespace Descriptive
             T sumGlobal;
             T maxValGlobal;
 
-            //should be better to use MPI_UNSIGNED_LONG_LONG but it doesn't work
+            
             MPI_Allreduce(cnt, &cntGlobal, 1, MPI_LONG_LONG_INT, MPI_SUM, comm);
             MPI_Allreduce(sum, &sumGlobal, 1, MPI_Type<T>::mpi_type(), MPI_SUM, comm);
             MPI_Allreduce(maxVal, &maxValGlobal, 1, MPI_Type<T>::mpi_type(), MPI_MAX, comm);

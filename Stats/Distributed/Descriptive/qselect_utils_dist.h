@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -24,7 +24,7 @@ namespace Sort
 #define DISABLE_RANK 0
 #define ENABLE_RANK  1
 
-//-----------------------------------------------------------------
+
 template <typename T>
 struct TCVectorIterator
 {
@@ -110,9 +110,9 @@ public:
         return TCError_NoError;
     }
 };
-//-----------------------------------------------------------------
 
-//processing missings and nans along all dimensions
+
+
 template <template <class> class MissingPolicyRef, template <class> class MissingPolicyNotRef, class OP> 
 TCErrorCode process_missings_and_nans_reduce_all(OP::T_state& state, TCSize_t& size, const TCDistArray* numbers, TCSize_t narrays)
 {
@@ -141,18 +141,18 @@ TCErrorCode process_missings_and_nans_reduce_all(OP::T_state& state, TCSize_t& s
                 ++size;
             }
 
-            // don't allow qnans
-            /*if(TCError::IsErrorImpl<OP::in_t>::run(&valArr[i]))
-            {
-                return tcerror_code_new(TCError_IllegalInput, TCArgPosition_UnKnown);
-            }*/
+            
+            
+
+
+
         }
     }
 
     return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
 }
 
-//processing missings and nans along dimension
+
 template <template <class> class MissingPolicy, class OP>
 void process_missings_and_nans_reduce_dim(OP &op, const TCArray *in_array, OP::T_state& state, std::vector<TCSize_t>& nelems, TCSize_t dim)
 {
@@ -218,7 +218,7 @@ struct operator_temp_copy_dist_t
         MPI_Comm_size(comm, &total_ranks);
         TCInt32 masterRank = destRank == ALL_RANKS ? MASTER_RANK : destRank;
 
-        // MPI faults with TCSize (unsupported operation for this type), so use TCSSize
+        
         TCSSize_t total_elem = 0;
         MPI_Allreduce(&nelem, &total_elem, 1, mpi_traits<TCSSize_t>::mpi_type(), MPI_SUM, comm);
 
@@ -236,7 +236,7 @@ struct operator_temp_copy_dist_t
                 }
                 int sz = 0;
                 MPI_Recv(&sz, 1, MPI_INT, i, 1, comm, &status);
-                T dummy; // for sz = 0
+                T dummy; 
                 MPI_Recv(sz == 0 ? &dummy : &state[nelem], sz, mpi_traits<T>::mpi_type(), i, 2, comm, &status);
                 nelem += sz;
             }
@@ -247,7 +247,7 @@ struct operator_temp_copy_dist_t
         {
             int sz = (int)nelem;
             MPI_Send(&sz, 1, MPI_INT, masterRank, 1, comm);
-            T dummy; // for sz = 0
+            T dummy; 
             MPI_Send(sz == 0 ? &dummy : &state[0], sz, mpi_traits<T>::mpi_type(), masterRank, 2, comm);
             nelem = -1;
         }
@@ -263,17 +263,17 @@ struct operator_qselect_dist_t
     {
         state.resize(nelem);
 
-        // MPI faults with TCSize (unsupported operation for this type), so use TCSSize
+        
         TCSSize_t total_elem = 0;
         TCSSize_t nelem_s = nelem;
         MPI_Allreduce(&nelem_s, &total_elem, 1, mpi_traits<TCSSize_t>::mpi_type(), MPI_SUM, comm);
 
-        // TODO total_elem == 0 ===> return error? (operator specific)
-        // TODO nelem on MASTER_RANK is 0 and MPI_Comm_split is processed ===> where is result stored?
+        
+        
 
         int color = (0 == nelem ? MPI_UNDEFINED : 0);
 
-        // Creating new communicator which processes won't contain zero-size data
+        
         MPI_Comm newcomm = MPI_COMM_NULL;
         MPI_Comm_split(comm, color, rank, &newcomm);
 
@@ -289,16 +289,16 @@ struct operator_qselect_dist_t
 
         TCSSize_t err_s = (TCSSize_t)err;
         TCSSize_t total_err_s = 0;
-        MPI_Allreduce(&err_s, &total_err_s, 1, mpi_traits<TCSSize_t>::mpi_type(), MPI_MAX, comm); // TODO Max error?
+        MPI_Allreduce(&err_s, &total_err_s, 1, mpi_traits<TCSSize_t>::mpi_type(), MPI_MAX, comm); 
 
         return (TCErrorCode)total_err_s;
     }
 };
 
-// max reserved elements on master rank
+
 #define MAX_RESERVED_ELEMENTS (1024*1024)
 
-// distributed processing of the reduction operation
+
 template <template <class> class MissingPolicyRef, template <class> class MissingPolicyNotRef, class OP> 
 TCErrorCode process_all_dist(OP &op, const TCDistArray* numbers, TCSize_t narrays, TCSize_t dim, TCDistArray** value)
 {
@@ -308,10 +308,10 @@ TCErrorCode process_all_dist(OP &op, const TCDistArray* numbers, TCSize_t narray
     int rank;
     MPI_Comm_rank(comm, &rank);
 
-    // reduce array according to its dimensions
+    
     if (0 == dim)
     {
-        // reduce all elements
+        
         size_t telem = 0;
         size_t total_local_elem = 0;
         for (TCSize_t i = 0 ; i < narrays; i++)
@@ -319,21 +319,21 @@ TCErrorCode process_all_dist(OP &op, const TCDistArray* numbers, TCSize_t narray
             telem += numbers[i].m_Layout.m_GlobalSize;
             total_local_elem += numbers[i].m_LocalArray.m_numelt;
         }
-        // if the data is empty then returns error
+        
         if (telem == 0)
         {
             return tcerror_code_new(TCError_IllegalSize, TCArgPosition_UnKnown);
         }
         assert(value[0]->m_Layout.m_GlobalSize == 1);
 
-        // collect all data
+        
         OP::T_state state;
-        TCSSize_t destRank = TCDistArray_Get_MasterRank(*(value[0])); // assume: destrank for all numbers and value are same
+        TCSSize_t destRank = TCDistArray_Get_MasterRank(*(value[0])); 
         TCInt32 masterRank = destRank == ALL_RANKS ? MASTER_RANK : destRank;
         TCSSize_t init_err;
         if (rank == masterRank && telem <= MAX_RESERVED_ELEMENTS)
         {
-            // reserve more data on master rank to prevent copying
+            
             init_err = (TCSSize_t)op.InitState(state, rank == masterRank ? telem : total_local_elem);
         }
         else
@@ -448,11 +448,11 @@ TCErrorCode process_all_dist(OP &op, const TCDistArray* numbers, TCSize_t narray
     }
     else
     {
-        // reduce data in 'dim' direction
+        
         const TCArray* numbersLocal = &(numbers[0].m_LocalArray);
         TCArray* valueLocal = &(value[0]->m_LocalArray);
 
-        //check on errors
+        
         if (narrays != 1)
         {
             return tcerror_code_new(TCError_IllegalInput, TCArgPosition_UnKnown);
@@ -466,11 +466,11 @@ TCErrorCode process_all_dist(OP &op, const TCDistArray* numbers, TCSize_t narray
             return tcerror_code_new(TCError_IllegalSize, TCArgPosition_UnKnown);
         }
 
-        // processing along dimension
+        
         if ((dim - 1) == numbers->m_Layout.m_DistDim)
         {
-            // reduction operation when the reduction dimension and the distribution dimension is equal
-            // redistribute const TCDistArray* numbers along another dimension, then call serial implementation
+            
+            
 
             TCSize_t myID = TCDistArray_Get_Rank(*numbers);
             TCSize_t rankCount = TCDistArray_Get_NProcs(*numbers);
@@ -497,9 +497,9 @@ TCErrorCode process_all_dist(OP &op, const TCDistArray* numbers, TCSize_t narray
             TCSize_t newDistDim = 0;
             if (myID == MASTER_RANK)
             {
-                // Choosing new distributed dimension
-                // Selecting one where ((element count along this dimension  / 256 (threshold size)) % numProcs) is closest to 0
-                // to make number of elements processed on each rank closer to each other
+                
+                
+                
                 TCSize_t piecesCount = 0;
                 TCSize_t rankOverhead = 0;
                 TCSize_t rankOverheadMin = rankCount + 1;
@@ -564,12 +564,12 @@ TCErrorCode process_all_dist(OP &op, const TCDistArray* numbers, TCSize_t narray
                 }
             }
         }
-    } // 0 == dim
+    } 
 
     return tcerror_code_new(err, TCArgPosition_UnKnown);
 }
 
-// distributed processin of the reduction operation when the reduction dimension and the distribution dimension is equal
+
 template <template <class> class MissingPolicyRef, template <class> class MissingPolicyNotRef, class OP> 
 TCErrorCode process2vector_dim_dist(OP &op, const TCDistArray *numbers, TCDistArray** value, TCSize_t dim)
 {
@@ -616,7 +616,7 @@ TCErrorCode process2vector_dim_dist(OP &op, const TCDistArray *numbers, TCDistAr
     return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
 }
 
-// distributed processin of the reduction operation by dimensions 
+
 template <template <class> class MissingPolicyRef, template <class> class MissingPolicyNotRef, class OP> 
 TCErrorCode process2vector_all_dist(OP &op, const TCDistArray *numbers, TCSize_t narrays, TCDistArray** value)
 {
@@ -684,7 +684,7 @@ TCErrorCode process2vector_all_dist(OP &op, const TCDistArray *numbers, TCSize_t
 }
 
 
-// distributed processing of the reduction operation
+
 template <template <class> class MissingPolicyRef, template <class> class MissingPolicyNotRef, class OP> 
 TCErrorCode process2vector_dist(OP &op, const TCDistArray* numbers, TCSize_t narrays, TCSize_t dim, TCDistArray** value)
 {
@@ -694,7 +694,7 @@ TCErrorCode process2vector_dist(OP &op, const TCDistArray* numbers, TCSize_t nar
     }
     else
     {
-        // reduce data in 'dim' direction
+        
         if (narrays != 1)
         {
             return tcerror_code_new(TCError_IllegalInput, TCArgPosition_UnKnown);
@@ -732,9 +732,9 @@ TCErrorCode process2vector_dist(OP &op, const TCDistArray* numbers, TCSize_t nar
             }
 
             return tcerror_code_new(err, TCArgPosition_UnKnown);
-        }// if ((dim - 1) == numbers->m_Layout.m_DistDim)    
-    }// if (0 == dim)
+        }
+    }
 }
 
-} // namespace Sort
-} // namespace Descriptive
+} 
+} 

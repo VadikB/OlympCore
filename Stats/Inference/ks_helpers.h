@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -55,8 +55,8 @@ namespace Inference
     template <typename T>
     static TCErrorCode skip_missings(T* data, TCSize_t& n, TCArgumentID id)
     {
-        // We need to check first element for -Inf,
-        // and last for Inf and NaN.
+        
+        
         if (Utils::isinf(data[0]))
         {
             return tcerror_code_new(TCError_IllegalInput, TCArgumentID(1));

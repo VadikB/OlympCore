@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -55,7 +55,7 @@ namespace Dist
                     ret = Utils::log(alpha) - T(1.0)*Utils::log(x) + alpha*(Utils::log(x)-Utils::log(beta)) - powXDivBetaAlpha;
                     if(Utils::isnan(ret))
                     {
-                        //dominating powXDivBetaAlpha>0 -> exp(-powXDivBetaAlpha) = 0
+                        
                         return 0;
                     }
                     return Utils::exp(ret);

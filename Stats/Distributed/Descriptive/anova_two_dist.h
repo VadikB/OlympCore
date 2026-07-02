@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -108,9 +108,9 @@ namespace Descriptive
 
             const TCArray *localData = &data->m_LocalArray;
 
-            //create new comm
-            MPI_Comm comm; //new communicator
-            int color = (localData->m_numelt != 0 ? 0 : MPI_UNDEFINED); //include ranks with data only
+            
+            MPI_Comm comm; 
+            int color = (localData->m_numelt != 0 ? 0 : MPI_UNDEFINED); 
             MPI_Comm_split(comm_old, color, rank, &comm);
            
             TCSize_t rows_global = data->m_Layout.m_GlobalShape[0];
@@ -139,7 +139,7 @@ namespace Descriptive
 
             if (tcerror_code_get_errorid(ec) != TCError_NoError) errorsCountLocal = 1;
 
-            //check for missings on all ranks
+            
             MPI_Allreduce(&errorsCountLocal, &errorsCountGlobal, 1, MPI_UNSIGNED, MPI_SUM, comm_old);
             if (errorsCountGlobal) 
             {

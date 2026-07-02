@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -133,9 +133,9 @@ namespace Descriptive
 
             const TCArray *localData = &data->m_LocalArray;
 
-            //create new comm
-            MPI_Comm comm; //new communicator
-            int color = (localData->m_numelt != 0 ? 0 : MPI_UNDEFINED); //include ranks with data only
+            
+            MPI_Comm comm; 
+            int color = (localData->m_numelt != 0 ? 0 : MPI_UNDEFINED); 
             MPI_Comm_split(comm_old, color, rank, &comm);
 
             T maxVal = 0;
@@ -174,7 +174,7 @@ namespace Descriptive
 
             if (tcerror_code_get_errorid(ec) != TCError_NoError) errorsCountLocal = 1;
 
-            //check for missings on all ranks
+            
             MPI_Allreduce(&errorsCountLocal, &errorsCountGlobal, 1, MPI_UNSIGNED, MPI_SUM, comm_old);
             if (errorsCountGlobal) 
             {
@@ -291,7 +291,7 @@ namespace Descriptive
             TCSize_t endIdx = data->m_Layout.m_Spans[rank].EndIdx;
             TCSize_t startIdx = data->m_Layout.m_Spans[rank].StartIdx;
 
-            TCSize_t samples_local = rows_local / cnt_row_sample; //number of "whole" samples on current rank
+            TCSize_t samples_local = rows_local / cnt_row_sample; 
             TCSize_t offset_start = 0;
             TCSize_t offset_end = 0;
 
@@ -309,11 +309,11 @@ namespace Descriptive
             }
 
             TCSize_t samples_global = data->m_Layout.m_GlobalShape[0] / cnt_row_sample;
-            TCSize_t dims_global[] = {samples_global, data->m_Layout.m_GlobalShape[1]}; //samples, cols
+            TCSize_t dims_global[] = {samples_global, data->m_Layout.m_GlobalShape[1]}; 
 
             std::vector<T> s_sum_sample_local(samples_local_total, 0);
 
-            //needed temp arrays for cols only if dim1 == 0 (distributed by rows)!!!
+            
             std::vector<T> s_sum_col_local(cols_local, 0);
 
             std::vector<T> s_sum_col_sample_local(samples_local_total * cols_local, 0);
@@ -324,12 +324,12 @@ namespace Descriptive
             std::vector<T> s_var_dim2_global(dims_global[dim2], 0);
 
             T* s_sum_sample_local_ptr = &s_sum_sample_local[0];
-            T* s_sum_col_local_ptr = s_sum_col_local_data; //s_sum_col->m_localArray.m_data;
+            T* s_sum_col_local_ptr = s_sum_col_local_data; 
             T* s_sum_col_sample_local_ptr = &s_sum_col_sample_local[0];
 
             T* s_sum_dim2_local_ptr = s_sum_sample_local_ptr;
 
-            if (dim1 == 0) //distributed by rows (samples)
+            if (dim1 == 0) 
             {
                 s_sum_col_local_ptr = &s_sum_col_local[0];
 
@@ -359,15 +359,15 @@ namespace Descriptive
 
             MPI_Bcast(&threshold, 1, MPI_UNSIGNED_LONG, 0, comm);
 
-             //=============================== merge sums for samples ==========================// 
-            //merge sample arrays if dim1 == 0 (distributed by rows) and samples splitted between ranks
+             
+            
             if (dim1 == 0 && samplesSplitted)
             {
                 mergeSampleArrays(cnt_row_sample, offset_start, offset_end, samples_local_total, cols_local, 
                                   threshold, s_sum_sample_local_ptr, &s_sum_col_sample_local[0], comm, rank);
             }
 
-            TCSize_t dims_local[] = {samples_local_total, cols_local}; //samples, cols
+            TCSize_t dims_local[] = {samples_local_total, cols_local}; 
             
             std::vector<TCUInt64> s_cnt_sample_local(samples_local_total, 0);
             std::vector<T> s_avg_sample_local(samples_local_total, 0);
@@ -385,7 +385,7 @@ namespace Descriptive
             *(ss[0]) = (T)0;
             *(ss[1]) = (T)0;
 
-            //if dim1 == 1 || dim1 == 0 && rows % cnt_row_samples == 0 then we can use AnovaTwoRep<T>::ComputeAvgSSFactor as more effective
+            
             ComputeAvgSSFactorDist(cnt_row_sample, dims_local[dim1], cnt_row_sample * dims_global[dim2], dims_global[dim2], 
                                    s_cnt_local_data_result[dim1], s_sum_local_data_result[dim1], s_avg_local_data_result[dim1], ss[dim1], avg_global, offset_start);
             
@@ -412,7 +412,7 @@ namespace Descriptive
                                     s_var_dim[0], s_var_dim[1], &s_var_col_sample_local[0],
                                     ss_err);
             
-            //compute global var before dividing
+            
             MPI_Reduce(s_var_dim[dim2], &s_var_dim2_global[0], dims_global[dim2], MPI_Type<T>::mpi_type(), MPI_SUM, MASTER_RANK, comm);
 
             GetGlobalSum(comm, ss_int);
@@ -425,8 +425,8 @@ namespace Descriptive
                                   threshold, &s_var_sample_local[0], &s_var_col_sample_local[0], comm, rank);
             }
 
-            //divide vars for col_sample and dim1
-            if (dim1 == 0) //distributed by rows
+            
+            if (dim1 == 0) 
             {
                 for (TCSize_t i = 0; i < samples_local_total; ++i)
                 {
@@ -438,7 +438,7 @@ namespace Descriptive
                     }
                 }
             }
-            else //distributed by cols
+            else 
             {
                 for (TCSize_t i = 0; i < cols_local; ++i)
                 {
@@ -475,7 +475,7 @@ namespace Descriptive
                 }
             }
 
-            //if dim1 == 0 - gather samples and col_samples data on ranks with output arrays!!!
+            
             if (dim1 == 0)
             {
                 TCSize_t sample_index_start = startIdx / cnt_row_sample;
@@ -501,7 +501,7 @@ namespace Descriptive
                     }
                     else if (i || !offset_start)
                     {
-                        //send
+                        
                         TCUInt32 tag1 = i + sample_index_start % threshold;
                         TCUInt32 tag2 = i + sample_index_start % threshold + threshold;
                         TCUInt32 tag3 = i + sample_index_start % threshold + 2 * threshold;
@@ -524,7 +524,7 @@ namespace Descriptive
                     }
                 }
 
-                TCInt32 n_ranks = dims_global[0] / threshold; //number of ranks with output
+                TCInt32 n_ranks = dims_global[0] / threshold; 
                 if (dims_global[0] % threshold) ++n_ranks;
 
                 if (rank < n_ranks)
@@ -670,7 +670,7 @@ namespace Descriptive
         {
             if (offset_start)
             {
-                //need to send
+                
                 TCUInt32 destRankOffset = (cnt_row_sample - offset_start) / threshold;
                 if ((cnt_row_sample - offset_start) % threshold) ++destRankOffset;
 
@@ -688,7 +688,7 @@ namespace Descriptive
                 MPI_Send(&s_arr_col_sample_local_tmp[0], cols_local, MPI_Type<T>::mpi_type(), destRank, 1, comm);
 
 
-                //need to recv
+                
                 MPI_Status status;
 
                 MPI_Recv(s_arr_sample_local, 1, MPI_Type<T>::mpi_type(), destRank, 0, comm, &status);
@@ -703,7 +703,7 @@ namespace Descriptive
 
             if (offset_end && offset_start < threshold)
             {
-                //need to recv
+                
                 TCUInt32 srcRankOffset = (cnt_row_sample - offset_end) / threshold;
                 if ((cnt_row_sample - offset_end) % threshold) ++srcRankOffset;
 

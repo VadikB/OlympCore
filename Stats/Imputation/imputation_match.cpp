@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "TCArrayUtils.h"
@@ -65,7 +65,7 @@ bool fillIndex(const TCArray* data, TCUInt64 nvec, std::vector<IntTPairs<T>>* A_
     for (i = 0; i < na; i++)
     {
         (*A_vec)[i].ind = i;  
-        // check for missings inf nan here (not allowed)
+        
         index = i * data->m_strides[0] + (nvec - 1) * data->m_strides[1];
         tref = pdata[index];
         if (TCError::IsMissingImpl<T>::run(&tref) || isinf<T>(tref) || TCError::is_nan<T>(tref))
@@ -123,7 +123,7 @@ TCErrorCode imputation_match_body(const TCArray* data_rec, TCUInt64 nvec_rec, co
     {
         return tcerror_code_new(TCError_IllegalInput, 4);
     }
-    // calc empirical cdf
+    
     std::vector<T> cdfA(na);
     std::vector<T> cdfB(nb);
     std::vector<IntTPairs<T>> A_vec(na);
@@ -140,11 +140,11 @@ TCErrorCode imputation_match_body(const TCArray* data_rec, TCUInt64 nvec_rec, co
     {
         return tcerror_code_new(TCError_IllegalInput, TCArgumentID(3)); 
     }
-    // 
+    
     makeCDF(na, A_vec, &cdfA);
     makeCDF(nb, B_vec, &cdfB);
-    // fill in the result matrix
-    // 1 matrix A
+    
+    
     for (i = 0; i < na; i++)
     {
         for (j = 0; j < ma; j++)
@@ -158,7 +158,7 @@ TCErrorCode imputation_match_body(const TCArray* data_rec, TCUInt64 nvec_rec, co
             pout[i * data_out->m_strides[0] + j * data_out->m_strides[1]] = tref;
         }
     }
-    // 2 matching at B
+    
     p = 0;
     for (i = 0; i < na; i++)
     {

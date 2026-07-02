@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -69,7 +69,7 @@ namespace Descriptive
     template <typename T>
     TCErrorCode stats_redall_rank_avg(const T number,  const TCArray* ref, TCBool order, T* rank_avg)
     {
-        // Check empty input arrays and return a TCError_IllegalSize error when it applies.
+        
         bool noInput = true;
         TCSize_t arrayId = 0;
         while (noInput && arrayId < 1)
@@ -96,7 +96,7 @@ namespace Descriptive
     {
         assert(dim > 0 && dim <= ref->m_ndims);
         
-        // Check empty input array in the reduction direction and return an error when it applies.
+        
         if (ref->m_dims[dim-1] == 0)
         {
             return tcerror_code_new(TCError_IllegalSize, 2);

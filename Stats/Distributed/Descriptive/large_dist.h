@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -29,7 +29,7 @@ struct large_dist_t : public large_t<T>, public Sort::operator_qselect_dist_t
 
     inline TCErrorCode GetResultDist(T_state& state, TCSize_t total_elem, MPI_Comm comm, T& result)
     {
-        // Checking input data according to the specification
+        
         if (0 == k || total_elem < this->k)
         {
             return tcerror_code_new(TCError_IllegalInput, TCArgPosition_UnKnown);
@@ -38,13 +38,13 @@ struct large_dist_t : public large_t<T>, public Sort::operator_qselect_dist_t
         TCInt32 myRank;
         MPI_Comm_rank(comm, &myRank);
 
-        // check for meta-numeric values
+        
         TCInt32 errorRank = -1;
         T v;
         for (TCSize_t i = 0; i < state.size(); i++)
         {
             v = state[i];
-            // don't allow qnans to qsel, missings already filtered in the outer loop
+            
             if(TCError::IsErrorImpl<T>::run(&v))
             {
                 errorRank = myRank;
@@ -58,10 +58,10 @@ struct large_dist_t : public large_t<T>, public Sort::operator_qselect_dist_t
         {
             result = large_dist<T>(state, total_elem, this->k, comm);
         }
-        else // error was found at least on one rank
+        else 
         {
             MPI_Bcast(&v, 1, mpi_traits<T>::mpi_type(), errorRankToUse, comm);
-            result = v; // propagate error
+            result = v; 
         }
 
         return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
@@ -69,4 +69,4 @@ struct large_dist_t : public large_t<T>, public Sort::operator_qselect_dist_t
 };
 
 
-} /* namespace Descriptive */ 
+}  

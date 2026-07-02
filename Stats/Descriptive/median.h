@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -18,17 +18,17 @@ namespace Descriptive
 template <typename T>
 inline T median(T* data, TCSize_t nelem)
 {
-    // check for meta-numeric values
+    
     for (TCSize_t i = 0; i < nelem; i++ )
     {
         T v = data[i];
-        // don't allow qnans to qsel, missings already filtered in the outer loop
+        
         if(TCError::IsErrorImpl<T>::run(&v))
         {
-            return v; // propagate error
+            return v; 
         }
     }
-    // call different versions of quickselect for odd- and even- length arrays
+    
     if (nelem & 1)
     {
         return quick_select<T, false, TCSize_t, interpolation_t<T,1,2>>(data, nelem, (nelem - 1) / 2);

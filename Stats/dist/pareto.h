@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -60,7 +60,7 @@ namespace Dist
                 return TCError::NewError<T>(shape, TCFuncId_PARETO_DIST, TCArgPosition_3, TCError_IllegalInput);
             }
 
-            //return x < scale ? 0 : (T)1.0 - Utils::pow(scale / x, shape);
+            
             T z = shape * (Utils::log(scale) - Utils::log(x));
             return x < scale ? 0 : -Utils::expm1(z);
         }
@@ -86,7 +86,7 @@ namespace Dist
                 return TCError::NewError<T>(probability, TCFuncId_PARETO_INV, TCArgPosition_1, TCError_IllegalInput);
             }
 
-            //return scale / Utils::pow(1 - probability, 1 / shape);
+            
             return scale * Utils::exp(- Utils::log1p(-probability) / shape);
         }
     };

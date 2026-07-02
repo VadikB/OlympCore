@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -191,7 +191,7 @@ namespace Descriptive
         static void ComputeAvgVarSS(const TCArray* data, const TCSize_t dim, const T avg_tot, const TCSize_t cnt_dim,  const T* s_sum_dim, 
                                     TCUInt64* s_cnt_dim, T* s_avg_dim, T* s_var_dim, T* ss_dim, T* ss_tot, bool varDistributed = false)
         {
-            *ss_dim = 0; //'dim' could be 'row' or 'col'
+            *ss_dim = 0; 
             TCSize_t index_dim[2];
 
             for (index_dim[dim] = 0; index_dim[dim] < data->m_dims[dim]; ++(index_dim[dim]))
@@ -243,7 +243,7 @@ namespace Descriptive
 
                 T tolerance = ULPS * std::numeric_limits<T>::epsilon() * maxVal;
 
-                if (fabs(*ss_err) < tolerance) //equals to 0
+                if (fabs(*ss_err) < tolerance) 
                 {
                     *f_row = ((fabs(ss_row) < tolerance) ? 0 : Utils::infinity<T>());
                     *f_col = ((fabs(ss_col) < tolerance) ? 0 : Utils::infinity<T>());

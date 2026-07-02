@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -84,4 +84,4 @@ struct interquartile_dist_dist_t : public interquartile_dist_t<T>, Sort::operato
 };
 
 
-} /* namespace Descriptive */ 
+}  

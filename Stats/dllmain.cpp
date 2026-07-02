@@ -1,10 +1,10 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
 
-#define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
+
+#define WIN32_LEAN_AND_MEAN  
 #include <windows.h>
 
 #pragma warning(push)
-#pragma warning(disable:4100) // unused formal parameter
+#pragma warning(disable:4100) 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -30,15 +30,15 @@ struct large_t : public Sort::operator_temp_copy_t<T>
             result = TCError::NewErrorImpl<T>::run(err);
             return err;
         }
-        // check for meta-numeric values
+        
         T* data = state.data();
         for (TCSize_t i = 0; i < nelem; i++ )
         {
             T v = data[i];
-            // don't allow qnans to qsel, missings already filtered in the outer loop
+            
             if(TCError::IsErrorImpl<T>::run(&v))
             {
-                result = v; // propagate error
+                result = v; 
                 return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
             }
         }

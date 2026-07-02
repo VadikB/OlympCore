@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -62,42 +62,42 @@ namespace timeseries_ar_internal
     {
         TCTypeTag typeTag = TimeSeriesUtils::argTypeTag<T>();
 
-        // Check if we have 1d array
+        
         if (!TimeSeriesUtils::TCArrayIs1D(data)) { return tcerror_code_new(TCError_IllegalInput, 1); }
-        // Check type 
+        
         if (data->m_tag != typeTag) { return tcerror_code_new(TCError_IllegalInput, 1); }
-        // Check for meta values
+        
         if (TimeSeriesUtils::TCArray1DContainsMetaValues<T>(data)) { return tcerror_code_new(TCError_IllegalInput, 1); }
 
-        // Check if method is correct
+        
         if (method != MaxLikelihood && method != LeastSquare && method != YuleWalker && method != ForwardBackward) 
         { return tcerror_code_new(TCError_IllegalInput, 3); }
 
-        // Check if presample is correct 
+        
         if (presample != extraNone && presample != extraPast && presample != extraFuture && presample != extraPastFuture) 
         { return tcerror_code_new(TCError_IllegalInput, 4); }
 
-        // Check if params is well allocated
+        
         if (params->m_tag != typeTag) { return tcerror_code_new(TCError_IllegalInput, 5); }
         if (!TimeSeriesUtils::TCArrayIs1D(params)) { return tcerror_code_new(TCError_IllegalInput, 5); }
         if (params->m_numelt < order + 1) { return tcerror_code_new(TCError_IllegalInput, 5); }
         
-        // Check if tstats is well allocated
+        
         if (tstats->m_tag != typeTag) { return tcerror_code_new(TCError_IllegalInput, 6); }
         if (!TimeSeriesUtils::TCArrayIs1D(tstats)) { return tcerror_code_new(TCError_IllegalInput, 6); }
         if (tstats->m_numelt < order + 1) { return tcerror_code_new(TCError_IllegalInput, 6); }
 
-        // Check if residuals is well allocated
+        
         if (residuals->m_tag != typeTag) { return tcerror_code_new(TCError_IllegalInput, 7); }
         if (!TimeSeriesUtils::TCArrayIs1D(residuals)) { return tcerror_code_new(TCError_IllegalInput, 7); }
         if (residuals->m_numelt < data->m_numelt) { return tcerror_code_new(TCError_IllegalInput, 7); }
 
-        // Check if cov is well allocated
+        
         if (cov->m_tag != typeTag) { return tcerror_code_new(TCError_IllegalInput, 10); }
         if (cov->m_ndims != 2) { return tcerror_code_new(TCError_IllegalInput, 10); }
         if (!(cov->m_dims[0] == order && cov->m_dims[1] == order)) { return tcerror_code_new(TCError_IllegalInput, 10); }
 
-        // TBD: if method == MaxLikelihood then call ARIMA
+        
         if (method == MaxLikelihood) 
         {
             method = LeastSquare;
@@ -106,11 +106,11 @@ namespace timeseries_ar_internal
         TCSize_t i;
         TCSize_t j;
 
-        // Time series length
+        
         TCSize_t len = data->m_numelt;
         if (len < order + 1) { return tcerror_code_new(TCError_IllegalSize, 1); }
                
-        // Set start and end observations
+        
         TCSize_t lagStart = ( (presample == extraPast || presample == extraPastFuture) ? 0 : order);
         TCSize_t lagEnd = len;
         if (presample == extraFuture || presample == extraPast) 
@@ -122,15 +122,15 @@ namespace timeseries_ar_internal
             lagEnd += 2 * order;
         }
 
-        // Regression eq. num
+        
         TCSize_t meq = (method == YuleWalker ? order : lagEnd - order);
 
-        // Time series data
+        
         T* tsData = (T*)data->m_data;
         TCSSize_t* tsStrides = data->m_strides;
         TCSSize_t tsStride = tsStrides[0];
 
-        // Create new series if presamples are needed
+        
         T* tsLongData;
         TCSSize_t tsLongStride;
         if (presample == extraNone) 
@@ -160,12 +160,12 @@ namespace timeseries_ar_internal
             }
         }
 
-        // Mean
+        
         T totalMean = 0.;
         TCErrorCode err_code = descriptive_average<T>(data, 1, &totalMean);
         if (err_code != TCError_NoError) { return TCError_Internal; }
 
-        // Create matrix
+        
         TCSize_t nRows = meq;
         TCSize_t nCols = order;
 
@@ -177,31 +177,31 @@ namespace timeseries_ar_internal
         TCSSize_t xLd = xStrides[1];
         T* xDataCol;
 
-        // RHS
+        
         TCArray* rhs;
         if (array_allocate1d<T>(nRows, &rhs) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr rhsPtr(rhs);
         T* rhsData = (T*)rhs->m_data;
 
-        // Coefs
+        
         TCArray* c;
         if (array_allocate1d<T>(nCols, &c) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr cPtr(c);
         T* coefData = (T*)c->m_data;
 
-        // Inverse matrix
+        
         TCArray* inorm;
         if (array_allocate2d<T>(nCols, nCols, &inorm) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr inormPtr(inorm);
 
-        // Covariance function
+        
         TCArray* covFunc;
         if (array_allocate1d<T>(order + 1, &covFunc) != TCError_NoError) { return TCError_OutOfMemory; }
         TCArrayUniquePtr covFncPtr(covFunc);
         T* covFuncData = (T*)covFunc->m_data;
 
         T sseOLS;
-        // Fill in matrix 
+        
         if (method == YuleWalker)
         {
             ar_cov_compute<T, mode>(tsLongData, tsLongStride, lagEnd, order + 1, totalMean, covFuncData); 
@@ -227,9 +227,9 @@ namespace timeseries_ar_internal
             {
                 rhsData[i] = covFuncData[i + 1];
             }
-//            TimeSeriesUtilsLA::linearSolve<T, mode>(xMatrix, rhs, c);
+
         }
-        else // OLS
+        else 
         {
             ar_cov_compute<T, mode>(tsLongData, tsLongStride, lagEnd, 1, totalMean, covFuncData); 
             for (j = 0; j < nCols; j++)
@@ -247,7 +247,7 @@ namespace timeseries_ar_internal
         }
         TimeSeriesUtilsOptimization::LinearLeastSquares<T, mode>(xMatrix, rhs, c, inorm, &sseOLS);
 
-        // Output: params
+        
         T* paramsData = (T*)params->m_data;
         TCSSize_t* paramsStrides = params->m_strides;
         TCSSize_t paramsStride = paramsStrides[0];
@@ -263,7 +263,7 @@ namespace timeseries_ar_internal
         if (sumCoefs == 0) { return TCError_Internal; } 
         paramsData[order * paramsStride] = totalMean * sumCoefs;
 
-        //Output: residuals
+        
         sseOLS = 0.;
         T resMean = 0.;
         T* resData = (T*)residuals->m_data;
@@ -289,11 +289,11 @@ namespace timeseries_ar_internal
         }
         resMean /= (T) (lagEnd - order);
         
-        // Output: sse, r2
+        
         *sse = sseOLS;
         *r2 = 1 - sseOLS / covFuncData[0];
 
-        // Output: cov
+        
         T resSigma2 = sseOLS / (T)(lagEnd - order) - resMean * resMean;
         T* covData = (T*)cov->m_data;
         TCSSize_t* covStrides = cov->m_strides;
@@ -320,7 +320,7 @@ namespace timeseries_ar_internal
             }
         }
 
-        // Output: tstats
+        
         T* tstatsData = (T*)tstats->m_data;
         tstatsData[0] = 1.;
         TCSSize_t* tstatsStrides = tstats->m_strides;

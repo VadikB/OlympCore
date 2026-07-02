@@ -1,10 +1,10 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
-//distribution types
+
 typedef enum
 {
     stats_enum_dist_pdf = 0,

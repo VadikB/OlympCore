@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -14,7 +14,7 @@
 template<typename T, int n = 1, int parts = 2>
 struct interpolation_t
 {
-    // a <= b
+    
     static inline T get(T a, T b)
     {
         T Inf = Utils::infinity<T>();
@@ -35,7 +35,7 @@ struct interpolation_with_pq_t
         this->p = p;
         this->q = q;
     }
-    // a <= b
+    
     inline T get(T a, T b) const
     {
         T Inf = Utils::infinity<T>();
@@ -55,7 +55,7 @@ struct interpolation_with_d_t
     {
         this->d = d;
     }
-    // a <= b
+    
     inline T get(T a, T b) const
     {
         T Inf = Utils::infinity<T>();
@@ -85,9 +85,9 @@ struct interpolation_with_d_t
 
 #define SWAP(a,b) std::swap(a,b)
 
-// Input data doesn't contain NaNs.
-// if even == false, then returns a k-th element in sorted array
-// if even == true, then returns an interpolation of k & k+1 elements in the sorted array
+
+
+
 template <typename T, bool even, typename TIndex, typename interpolation>
 T quick_select(T arr[], TIndex n, TIndex k, const interpolation &median = interpolation()) 
 {
@@ -104,13 +104,13 @@ T quick_select(T arr[], TIndex n, TIndex k, const interpolation &median = interp
         {
             if (high <= low)
             {
-                // One element only
+                
                 return arr[k];
             }
 
             if (high == low + 1)
             {
-                // Two elements only
+                
                 if (arr[low] > arr[high])
                 {
                     SWAP(arr[low], arr[high]);
@@ -122,20 +122,20 @@ T quick_select(T arr[], TIndex n, TIndex k, const interpolation &median = interp
         {
             if (high <= low)
             {
-                // One element only
+                
                 return median.get(arr[k],arr[k+1]);
             }
 
             if (high == low + 1)
             {
-                // Two elements only
+                
                 if (arr[low] > arr[high])
                     SWAP(arr[low], arr[high]);
                 return median.get(arr[k],arr[k+1]);
             }
         }
 
-        // Find median of low, middle and high items; swap into position low
+        
         middle = (low + high) / 2;
         if (arr[middle] > arr[high])
         {
@@ -150,10 +150,10 @@ T quick_select(T arr[], TIndex n, TIndex k, const interpolation &median = interp
             SWAP(arr[middle], arr[low]);
         }
 
-        // Swap low item (now in position middle) into position (low+1)
+        
         SWAP(arr[middle], arr[low+1]);
 
-        // Nibble from each end towards middle, swapping items when stuck
+        
         T pivotvalue = arr[low];
         ll = low + 1;
         hh = high;
@@ -176,10 +176,10 @@ T quick_select(T arr[], TIndex n, TIndex k, const interpolation &median = interp
             SWAP(arr[ll], arr[hh]);
         }
 
-        // Swap middle item (in position low) back into correct position
+        
         SWAP(arr[low], arr[hh]);
 
-        // Re-set active partition
+        
         if (!even)
         {
             if (hh <= k)

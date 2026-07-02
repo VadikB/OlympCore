@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -33,7 +33,7 @@ namespace MLE
 
         for(TCSize_t i = 0; i < data->m_numelt; i++)
         {
-            // TCUInt64 can't be inf, nan, missing or error so no additional check is required
+            
             valuesSum += ((TCUInt64*)(data->m_data))[i];
             valuesCount++;
         }

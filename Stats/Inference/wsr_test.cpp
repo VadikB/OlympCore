@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "wsr_test.h"
@@ -63,26 +63,26 @@ static TCErrorCode wstat_comp(T* xvec, TCSize_t x_len, T median, TCSize_t* wstat
     {
         return tcerror_code_new(TCError_IllegalSize, 1);
     }
-    // sort pairs by magnitudes
+    
     wsr_do_sort_pairs<T>(&pairsValAbs, countelem + 1);
 
     std::vector<TCSize_t> countPositive(countelem + 1);
 
-    // Start counting tied ranks 
-    i = 1; // counts all elements in pairsValAbs
-    j = 1; // counts all different elements
-    ties[0] = 0; // there could be no zeros
+    
+    i = 1; 
+    j = 1; 
+    ties[0] = 0; 
     countPositive[0] = 0;
-    //count zeros, not all elements should be zeros.  
+    
     while ((i < countelem) && (pairsValAbs[i].absx == 0))  
     {
         ties[0]++; 
         i++;
     }
-    while (j <= countelem && i <= countelem)  // count non-zero tied elements
+    while (j <= countelem && i <= countelem)  
     {
         ties[j] = 1; 
-        countPositive[j] = 0;  // remember if current element was positive
+        countPositive[j] = 0;  
         if (pairsValAbs[i].x > 0) 
         { 
             countPositive[j]++; 
@@ -99,21 +99,21 @@ static TCErrorCode wstat_comp(T* xvec, TCSize_t x_len, T median, TCSize_t* wstat
         j++;
         i++;  
     }
-    if(j < 3) // too few different elements
+    if(j < 3) 
     {
         return tcerror_code_new(TCError_IllegalSize, 1);
     }
     *numdifelt  = j - 1;
 
-    if (countelem - ties[0] < 2) // too few different non-zero elements
+    if (countelem - ties[0] < 2) 
     {
         return tcerror_code_new(TCError_IllegalSize, 1);
     }
     *numallelt = countelem - ties[0];
 
-    ties[0] = 0; // do not need anymore
+    ties[0] = 0; 
 
-    // computing doubled w - statistic, only ranks of positive elements are used
+    
     asumt = 1 + ties[1];
     wstattemp = asumt * countPositive[1];  
     for (i = 2; i <= *numdifelt; i++) 
@@ -170,11 +170,11 @@ TCErrorCode stats_wsr_test(T* xvec, TCSize_t x_len, const T median, TCHypothesis
     {
         return code_return;
     }
-    // correct value of statistic
+    
     wstat = 0.5 * (T)wstatx ;
 
     if(numallelt > CutOffSize)
-    {   // Approximation 
+    {   
         code_return = wsr_test_prob_long<T>(numallelt, numdifelt, ties, wstat, &temp);
         if (TCError::IsErrorImpl<T>::run(&temp))
         {
@@ -182,7 +182,7 @@ TCErrorCode stats_wsr_test(T* xvec, TCSize_t x_len, const T median, TCHypothesis
         }
         switch(testtype)
         {
-        case OneTailGT:  // Left tail
+        case OneTailGT:  
             {   
                 retval = temp;
                 break;
@@ -192,7 +192,7 @@ TCErrorCode stats_wsr_test(T* xvec, TCSize_t x_len, const T median, TCHypothesis
                 retval = (temp > .5 ? 2.* (1. - temp) : 2. * temp);
                 break;
             }
-        case OneTailLT:  // Right tail
+        case OneTailLT:  
             {
                 retval = 1. - temp;
                 break;
@@ -203,18 +203,18 @@ TCErrorCode stats_wsr_test(T* xvec, TCSize_t x_len, const T median, TCHypothesis
         }
     }
     else
-    {   // exact distribution
+    {   
         wstat2symmetric = numallelt * (numallelt + 1) - wstatx;
         wstatx = std::min<TCSize_t>(wstatx, wstat2symmetric);
         wstat2symmetric = numallelt * (numallelt + 1) - wstatx;
         switch (testtype)
         {
-        case OneTailGT: // Left tail
+        case OneTailGT: 
             {
                 code_return = wsr_cdf<T>(wstatx, numallelt, ties, numdifelt, &retval);
                 break;
             }
-        case TwoTail:  // Two tail
+        case TwoTail:  
             {
                 code_return = wsr_cdf<T>(wstatx, numallelt, ties, numdifelt, &temp);
                 if(code_return == TCError_NoError)
@@ -227,7 +227,7 @@ TCErrorCode stats_wsr_test(T* xvec, TCSize_t x_len, const T median, TCHypothesis
                 }
                 break;
             }
-        case OneTailLT:  // Right tail
+        case OneTailLT:  
             {
                 code_return = wsr_cdf<T>(wstatx, numallelt, ties, numdifelt, &temp);
                 if(code_return == TCError_NoError)
@@ -246,7 +246,7 @@ TCErrorCode stats_wsr_test(T* xvec, TCSize_t x_len, const T median, TCHypothesis
         }
     }
     *statistic = wstat;
-    // in some special case we can obtain p_value = 1 + eps instead of 1
+    
     *p_value = ( retval > 1. ? 1. : retval);
     return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown); 
 }

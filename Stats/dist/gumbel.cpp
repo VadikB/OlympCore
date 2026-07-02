@@ -1,13 +1,13 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 #include "gumbel.h"
 
 using namespace Dist;
 
-// C interface functions
+
 TCDouble stats_dist_max_gumbel_d(const TCDouble x, const TCDouble location, const TCDouble scale, const TCBool cumulative)
 {
     if (cumulative)
@@ -42,7 +42,7 @@ TCFloat stats_dist_inv_max_gumbel_f(const TCFloat x, const TCFloat location, con
     return Gumbel_Max<TCFloat>::InvCDF(x, location, scale);
 }
 
-// C interface functions
+
 TCDouble stats_dist_min_gumbel_d(const TCDouble x, const TCDouble location, const TCDouble scale, const TCBool cumulative)
 {
     if (cumulative)

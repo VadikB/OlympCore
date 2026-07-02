@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -17,7 +17,7 @@ namespace TimeSeriesUtilsLA
 {
     using namespace TimeSeriesUtils;
 
-    // QR decomposition. See rq spec.
+    
     template <typename T, TimeSeriesParallelMode mode>
     TCErrorCode QR(TCArray* x, TCArray* q, TCArray* r)
     {
@@ -36,7 +36,7 @@ namespace TimeSeriesUtilsLA
         return math_linalg_qr_d_e(x, q, r);
     }
 
-    // Dot routine
+    
     template <typename T, TimeSeriesParallelMode mode>
     T Dot(TCArray* x, TCArray* y)
     {
@@ -63,7 +63,7 @@ namespace TimeSeriesUtilsLA
         return r;
     }
 
-    // Axpy routine
+    
     template <typename T, TimeSeriesParallelMode mode>
     void Axpy(T aplha, TCArray* x, TCArray* y)
     {
@@ -80,7 +80,7 @@ namespace TimeSeriesUtilsLA
         math_linalg_axpy_d_e(alpha, x, &y);
     }
 
-    // Cholesky factorization routine
+    
     template <typename T, TimeSeriesParallelMode mode>
     void Cholesky(TCArray* a, TCUpperLower uplo)
     {
@@ -97,7 +97,7 @@ namespace TimeSeriesUtilsLA
         math_linalg_cholesky_d_e(&a, uplo);
     }
 
-    // Fill array a with Identity matrix
+    
     template<typename T>
     void MatrixFillIdentity(TCArray *a)
     {
@@ -144,7 +144,7 @@ namespace TimeSeriesUtilsLA
         unitTriangular
     } LABlasDiag;
 
-    // Blas trsm routine. See blas docs.
+    
     template <typename T, TimeSeriesParallelMode mode>
     void BlasTrsm(LABlasSide side, LABlasUpLo uplo, LABlasTrans trans, LABlasDiag diag, T alpha, TCArray* a, TCArray* b)
     {
@@ -205,7 +205,7 @@ namespace TimeSeriesUtilsLA
         TC_mkl_dtrsm_sequential(&blasSide, &blasUplo, &blasTrans, &blasDiag, &m, &n, &alpha, aData, &lda, bData, &ldb);
     }
 
-    // Blas trsv routine. See blas docs.
+    
     template <typename T, TimeSeriesParallelMode mode>
     void BlasTrsv(LABlasUpLo uplo, LABlasTrans trans, LABlasDiag diag, TCArray* a, TCArray* b)
     {
@@ -256,7 +256,7 @@ namespace TimeSeriesUtilsLA
         TC_mkl_dtrsv_sequential(&blasUplo, &blasTrans, &blasDiag, &n, aData, &lda, bData, &bStride);
     }
 
-    // Blas gemv routine. See blas docs.
+    
     template <typename T, TimeSeriesParallelMode mode>
     void BlasGemv(LABlasTrans trans,
         T alpha, TCArray* a,
@@ -312,7 +312,7 @@ namespace TimeSeriesUtilsLA
         TC_mkl_dgemv_sequential(&blasTrans, &m, &n, &alpha, aData, &lda, xData, &xInc, &beta, yData, &yInc);
     }
 
-    // Blas gemm routine. See blas docs.
+    
     template <typename T, TimeSeriesParallelMode mode>
     void BlasGemm(LABlasTrans transa, LABlasTrans transb, T alpha, TCArray* a, TCArray* b, T beta, TCArray* y)
     {

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -216,7 +216,7 @@ namespace Descriptive
             *msb = ssb / dfb;
             *msw = ssw / dfw;
 
-            if (fabs(ssw) < tolerance) //equals to 0
+            if (fabs(ssw) < tolerance) 
             {
                 *f = ((fabs(ssb) < tolerance) ? 0 : Utils::infinity<T>());
             }

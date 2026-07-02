@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -36,19 +36,19 @@ namespace Descriptive
 namespace Sort
 {
 
-// Input data doesn't contain NaNs and has at least one element
-// if even == false, then returns a k-th element in sorted array
-// if even == true, then returns an interpolation of k & k+1 elements (zero-based) in the sorted array
+
+
+
 template <typename T, bool even, typename TIndex, typename interpolation>
 T quick_select_dist(std::vector<T>& arr, TIndex total_elems, TIndex k, MPI_Comm comm, const interpolation &median = interpolation())
 {
     total_elems;
-    // TODO parameter consistency via assert (k>0, k or k+1 < total_elems, etc)
+    
     if (even)
     {
         k++;
     }
-    k++; // zero-based -> 1-based
+    k++; 
 
     TCSize_t len = arr.size();
     
@@ -97,7 +97,7 @@ T quick_select_dist(std::vector<T>& arr, TIndex total_elems, TIndex k, MPI_Comm 
     }
 }
 
-//Interpolation
+
 template<typename T>
 struct interpolation_with_d_t_dist
 {
@@ -109,7 +109,7 @@ struct interpolation_with_d_t_dist
     {
         this->d = d;
     }
-    // a <= b
+    
     inline T get(T a, T b) const
     {
         T Inf = Utils::infinity<T>();
@@ -143,9 +143,9 @@ struct interpolation_with_d_t_dist
     }
 };
 
-// Input data doesn't contain NaNs.
-// if even == false, then returns a k-th element in sorted array
-// if even == true, then returns an interpolation of k & k+1 elements in the sorted array
+
+
+
 template <typename T, bool even, typename T_interpolation>
 void select_dist(T* data, TCSize_t stride, TCSize_t* nelems, TCSize_t* gnelems, TCSize_t* k, TCSize_t* status, TCSize_t nvectors, T* v, T_interpolation &median, TCBool in_op, MPI_Comm& comm, int np)
 {
@@ -302,5 +302,5 @@ void select_dist(T* data, TCSize_t stride, TCSize_t* nelems, TCSize_t* gnelems, 
     }
 }
 
-} /* namespace DistSort */
-} /* namespace Descriptive */ 
+} 
+}  

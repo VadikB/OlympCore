@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -12,7 +12,7 @@ namespace Descriptive
 namespace Sort
 {
 
-//----------------------------------------------------------------------  
+
 template <typename T>
 struct operator_temp_copy_t
 {
@@ -34,7 +34,7 @@ struct operator_temp_copy_t
     {
         state[index] = x;
     }
-    //inline TCErrorCode GetResult(T_state& state, TCSize_t nelem, T& result)
+    
 };
 
 template <class T> struct SkipMissingValues
@@ -120,26 +120,26 @@ TCErrorID process_dim(OP &op, const TCArray *num, TCArray* value, TCSize_t dim)
     return TCError_NoError;
 }
 
-// process reduce operation
+
 template <template <class> class MissingPolicyRef, template <class> class MissingPolicyNotRef, class OP> 
 TCErrorCode process_all(OP &op, const TCArray* numbers, TCSize_t narrays, TCSize_t dim, TCArray** value)
 {
-    // reduce array according to its dimensions
+    
     if (0 == dim)
     {
-        // reduce all elements
+        
         size_t telem = 0;
         for (TCSize_t i = 0 ; i < narrays; i++)
         {
             telem += numbers[i].m_numelt;
         }
-        // if the data is empty then returns error
+        
         if (telem == 0)
         {
             return tcerror_code_new(TCError_IllegalSize, TCArgPosition_UnKnown);
         }
         assert(value[0]->m_numelt == 1);
-        // collect all data
+        
         OP::T_state state;
         TCErrorID err = op.InitState(state, telem);
         if (err != TCError_NoError)
@@ -246,7 +246,7 @@ TCErrorCode process_all(OP &op, const TCArray* numbers, TCSize_t narrays, TCSize
         OP::ou_t* result = (OP::ou_t*)(value[0]->m_data);
         return op.GetResult(state, nelem, *result);
     } else {
-        // reduce data in 'dim' direction
+        
         if (narrays != 1)
         {
             return tcerror_code_new(TCError_IllegalInput, TCArgPosition_UnKnown);
@@ -270,7 +270,7 @@ TCErrorCode process_all(OP &op, const TCArray* numbers, TCSize_t narrays, TCSize
             err = process_dim<MissingPolicyNotRef, OP>(op, numbers, value[0], dim);
         }
         return tcerror_code_new(err, TCArgPosition_UnKnown);
-    } // 0 == dim
+    } 
 }
 
 
@@ -338,25 +338,25 @@ TCErrorID process2vector_dim(OP &op, const TCArray *num, TCArray* value, TCSize_
     return TCError_NoError;
 }
 
-// process reduce operation
+
 template <template <class> class MissingPolicyRef, template <class> class MissingPolicyNotRef, class OP> 
 TCErrorCode process2vector_all(OP &op, const TCArray* numbers, TCSize_t narrays, TCSize_t dim, TCArray** value)
 {
-    // reduce array according to its dimensions
+    
     if (0 == dim)
     {
-        // reduce all elements
+        
         size_t telem = 0;
         for (TCSize_t i = 0 ; i < narrays; i++)
         {
             telem += numbers[i].m_numelt;
         }
-        // if the data is empty then returns error
+        
         if (telem == 0)
         {
             return tcerror_code_new(TCError_IllegalSize, TCArgPosition_UnKnown);
         }
-        // collect all data
+        
         OP::T_state state;
         TCErrorID err = op.InitState(state, telem);
         if (err != TCError_NoError)
@@ -460,10 +460,10 @@ TCErrorCode process2vector_all(OP &op, const TCArray* numbers, TCSize_t narrays,
                 }
             }
         }
-        // save results
+        
         return op.GetResult(state, nelem, (OP::ou_t*)(value[0]->m_data), 1);
     } else {
-        // reduce data in 'dim' direction
+        
         if (narrays != 1)
         {
             return tcerror_code_new(TCError_IllegalInput, TCArgPosition_UnKnown);
@@ -487,8 +487,8 @@ TCErrorCode process2vector_all(OP &op, const TCArray* numbers, TCSize_t narrays,
             err = process2vector_dim<MissingPolicyNotRef, OP>(op, numbers, value[0], dim);
         }
         return tcerror_code_new(err, TCArgPosition_UnKnown);
-    } // 0 == dim
+    } 
 }
 
-} // namespace Sort
-} // namespace Descriptive
+} 
+} 

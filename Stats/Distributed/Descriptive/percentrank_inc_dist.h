@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -42,7 +42,7 @@ struct percentrank_inc_dist_t : public percentrank_inc_t<T>
                 T_state state2;
                 MPI_Recv(&state2, sizeof(state), MPI_BYTE, i, 2, comm, &status);
 
-                // operator specific
+                
                 nelem += sz;
                 if (sz > 0)
                 {
@@ -75,7 +75,7 @@ struct percentrank_inc_dist_t : public percentrank_inc_t<T>
                     {
                         if (!(state2.error == 0) && i < masterRank)
                         {
-                            // proparage "the first error"
+                            
                             state.error = state2.error;
                         }
                     }
@@ -105,4 +105,4 @@ struct percentrank_inc_dist_t : public percentrank_inc_t<T>
 };
 
 
-} /* namespace Descriptive */ 
+}  

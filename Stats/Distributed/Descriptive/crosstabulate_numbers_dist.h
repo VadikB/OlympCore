@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -79,10 +79,10 @@ namespace Descriptive
         TCArray* allRowValues = 0;
         TCArray* allColValues = 0;
 
-        std::vector<T> elementsRow; // to populate row_labels
-        std::vector<T> elementsCol; // to populate column_labels
+        std::vector<T> elementsRow; 
+        std::vector<T> elementsCol; 
 
-        std::hash_map<T, TCSize_t, std::hash_compare<T, CrosstabulateNumbersDistComparer> > thisRowMap; // to find unique elements in linear time
+        std::hash_map<T, TCSize_t, std::hash_compare<T, CrosstabulateNumbersDistComparer> > thisRowMap; 
         std::hash_map<T, TCSize_t, std::hash_compare<T, CrosstabulateNumbersDistComparer> > thisColMap;
         std::hash_map<T, TCSize_t, std::hash_compare<T, CrosstabulateNumbersDistComparer> > elementsRowMap;
         std::hash_map<T, TCSize_t, std::hash_compare<T, CrosstabulateNumbersDistComparer> > elementsColMap;
@@ -90,8 +90,8 @@ namespace Descriptive
         code = TCError_NoError;
         globalCode = TCError_NoError;
 
-        code = TCDistArray_New_1D(typeTag, var1->m_Layout.m_GlobalSize, 1, &thisRowValues); // distribute by data
-        code |= TCDistArray_New_1D(typeTag, var2->m_Layout.m_GlobalSize, 1, &thisColValues); // distribute by data
+        code = TCDistArray_New_1D(typeTag, var1->m_Layout.m_GlobalSize, 1, &thisRowValues); 
+        code |= TCDistArray_New_1D(typeTag, var2->m_Layout.m_GlobalSize, 1, &thisColValues); 
         code |= TCArray_New_1D(typeTag, var1->m_Layout.m_GlobalSize, 1, &allRowValues);
         code |= TCArray_New_1D(typeTag, var2->m_Layout.m_GlobalSize, 1, &allColValues);
         code |= TCDistArray_Scatter(allRowValues, MASTER_RANK, thisRowValues);
@@ -102,7 +102,7 @@ namespace Descriptive
             return tcerror_code_new(TCError_Internal, TC_UNSPECIFIED_ARGID);
         }
 
-        // Filling with missings by default
+        
         for(TCSize_t i = 0; i < thisRowValues->m_LocalArray.m_numelt; i++)
         {
             if (typeTag == TC_DOUBLE)
@@ -117,7 +117,7 @@ namespace Descriptive
             }
         }
 
-        // Getting unique elements
+        
         TCSize_t idx = 0;
         T* data1 = 0;
         T* data2 = 0;
@@ -209,7 +209,7 @@ namespace Descriptive
             }
         }
 
-        // Now we have elements maps everywhere
+        
 
         TCArray* thisTable = 0;
         code = TCArray_New_2D(TC_UINT64, elementsRowMap.size(), elementsColMap.size(), 1, &thisTable);
@@ -241,15 +241,15 @@ namespace Descriptive
             }
         }
 
-        // Now we have found distArray
-        // We are now going to gather all data to output arrays and then reduce thisTable
+        
+        
 
-        // TODO: uncomment and make GV test passing
-        //if (myID == masterRank)
+        
+        
         {
-            //array_allocate2d<TCUInt64>(elementsRowMap.size(), elementsColMap.size(), table);
+            
             code = TCArray_New_2D(TC_UINT64, elementsRowMap.size(), elementsColMap.size(), 1, table);
-            //MPI_Bcast(&code, 1, MPI_INT, MASTER_RANK, communicator);
+            
             MPI_Allreduce(&code, &globalCode, 1, MPI_INT, MPI_MAX, communicator);
             if (globalCode != TCError_NoError)
             {
@@ -259,13 +259,13 @@ namespace Descriptive
 
         MPI_Reduce((TCUInt64*)(thisTable->m_data), (TCUInt64*)((*table)->m_data), (int)thisTable->m_numelt, MPI_LONG_LONG_INT, MPI_SUM, MASTER_RANK, communicator);
 
-        // TODO: uncomment and then make GV test passing
+        
         if (myID == MASTER_RANK)
         {
             code = TCError_NoError;
-            //code = array_allocate1d<T>(elementsRowMap.size(), row_labels);
+            
             code = TCArray_New_1D(typeTag, elementsRowMap.size(), 1, row_labels);
-            //code = array_allocate1d<T>(elementsColMap.size(), column_labels);
+            
             code |= TCArray_New_1D(typeTag, elementsColMap.size(), 1, column_labels);
             MPI_Allreduce(&code, &globalCode, 1, MPI_INT, MPI_MAX, communicator);
             if (globalCode != TCError_NoError)

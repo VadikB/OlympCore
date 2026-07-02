@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 
@@ -29,17 +29,17 @@ static int rand_ziggurat_expon(int method, TCRNGStatePtr state, int count, T* pt
     static T we[256], fe[256];
     static bool initialized = false;
     
-    int _rand[RNG_BUFFER_SIZE]; // for RNG_NEXT
+    int _rand[RNG_BUFFER_SIZE]; 
     int _current_rnd = -1;
 
-    method; // unreferenced parameter
+    method; 
 
     if(!initialized)
     {
         const T m2 = 4294967296.0;
         T de = 7.697117470131487, te=de, ve = 3.949659822581572e-3;
         
-        // init the tables
+        
         T q = ve/exp(-de);
         ke[0] = (de/q)*m2;
         ke[1] = 0;

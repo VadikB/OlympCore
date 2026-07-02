@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -41,14 +41,14 @@ namespace MLE
                 return tcerror_code_new(TCError_IllegalInput, 1);
             }
 
-            // checking inf, nan or error
+            
             if ((isnan(&currentValue)) || (std::numeric_limits<T>::infinity() == currentValue) || (TCError::IsErrorImpl<T>::run(&currentValue)))
             {
                 return tcerror_code_new(TCError_IllegalInput, 1);
             }
             else
             {
-                // skipping missings
+                
                 if (!(TCError::IsMissing<T>(const_cast<T*>(&currentValue))))
                 {
                     valuesSum += currentValue;

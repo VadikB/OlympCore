@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -44,7 +44,7 @@ namespace Dist
                 return TCError::NewError<T>(mean, TCFuncId_LOGISTIC_DIST, TCArgPosition_2, TCError_IllegalInput);
             }
 
-            // At this point we have scale <= 0 or scale == inf.
+            
             assert(scale <= 0 || Utils::isinf(scale));
             return TCError::NewError<T>(scale, TCFuncId_LOGISTIC_DIST, TCArgPosition_3, TCError_IllegalInput);
         }
@@ -77,7 +77,7 @@ namespace Dist
                 return TCError::NewError<T>(mean, TCFuncId_LOGISTIC_DIST, TCArgPosition_2, TCError_IllegalInput);
             }
 
-            // At this point we have scale <= 0 or scale == inf.
+            
             assert(scale <= 0 || Utils::isinf(scale));
             return TCError::NewError<T>(scale, TCFuncId_LOGISTIC_DIST, TCArgPosition_3, TCError_IllegalInput);
         }
@@ -113,17 +113,17 @@ namespace Dist
                 return TCError::NewError<T>(mean, TCFuncId_LOGISTIC_INV, TCArgPosition_2, TCError_IllegalInput);
             }
 
-            // At this point we have scale <= 0 or scale == inf.
+            
             assert(scale <= 0 || Utils::isinf(scale));
             return TCError::NewError<T>(scale, TCFuncId_LOGISTIC_INV, TCArgPosition_3, TCError_IllegalInput);
         }
 
     private:
-        // Compute the exponential term for the PDF. Depending on the value of x
-        // relative to mean, one of two expressions is evaluated. Two expressions
-        // are needed to handle extreme values. If the standard expression
-        // exp(-(x - mean)/s) were used for all values, then the PDF would evaluate
-        // to NaN when x == -inf.
+        
+        
+        
+        
+        
         static T PDFExpComponent(const T x, const T mean, const T scale)
         {
             assert(scale > 0);

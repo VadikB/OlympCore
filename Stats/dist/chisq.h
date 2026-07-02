@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -38,7 +38,7 @@ namespace Dist
                 return deg_freedom;
             }
 
-            // At this point, should have deg_freedom < 1 or deg_freedom == inf.
+            
             assert(deg_freedom < 1 || Utils::isinf(deg_freedom));
             return TCError::NewError<T>(deg_freedom, TCFuncId_CHISQ_DIST, TCArgPosition_2, TCError_IllegalInput);
         }
@@ -52,7 +52,7 @@ namespace Dist
                 {
                     return 0;
                 }
-                else if (Utils::isinf(x)) // NaN is returned when x = +Inf without this check
+                else if (Utils::isinf(x)) 
                 {
                     return 0;
                 }
@@ -66,8 +66,8 @@ namespace Dist
 
                     if (isinf(pdfNumerator) || isinf(pdfDenominator))
                     {
-                        // We may be here because of an overflow in the formulation of the PDF numerator, denominator, or both
-                        // above. Try doing the evaluation with an alternate formulation.
+                        
+                        
                         const T powTerms = (kd2-1) * Utils::log2(x) - kd2;
                         const T expTerm = -x/2 * Utils::log2(Utils::exp(static_cast<T>(1)));
                         const T gammaTerm = -Utils::gammaln(kd2) / Utils::log(static_cast<T>(2));
@@ -78,7 +78,7 @@ namespace Dist
                         return pdfNumerator/pdfDenominator;
                     }
                 }
-                else // use normal distribution
+                else 
                 {
                     return Norm<T>::PDF(x, dof, Utils::sqrt(static_cast<T>(2))*Utils::sqrt(dof));
                 }
@@ -93,7 +93,7 @@ namespace Dist
                 return deg_freedom;
             }
 
-            // At this point, should have deg_freedom < 1 or deg_freedom == inf.
+            
             assert(deg_freedom < 1 || Utils::isinf(deg_freedom));
             return TCError::NewError<T>(deg_freedom, TCFuncId_CHISQ_DIST, TCArgPosition_2, TCError_IllegalInput);
         }
@@ -121,7 +121,7 @@ namespace Dist
                 return TCError::NewError<T>(probability, TCFuncId_CHISQ_INV, TCArgPosition_1, TCError_IllegalInput);
             }
 
-            // At this point, should have deg_freedom < 1 or deg_freedom == inf.
+            
             assert(deg_freedom < 1 || Utils::isinf(deg_freedom));
             return TCError::NewError<T>(deg_freedom, TCFuncId_CHISQ_INV, TCArgPosition_2, TCError_IllegalInput);
         }
@@ -149,7 +149,7 @@ namespace Dist
                 return deg_freedom;
             }
 
-            // At this point, should have deg_freedom < 1 or deg_freedom == inf.
+            
             assert(deg_freedom < 1 || Utils::isinf(deg_freedom));
             return TCError::NewError<T>(deg_freedom, TCFuncId_CHISQ_DIST_RT, TCArgPosition_2, TCError_IllegalInput);
         }
@@ -177,7 +177,7 @@ namespace Dist
                 return TCError::NewError<T>(probability, TCFuncId_CHISQ_INV_RT, TCArgPosition_1, TCError_IllegalInput);
             }
 
-            // At this point, should have deg_freedom < 1 or deg_freedom == inf.
+            
             assert(deg_freedom < 1 || Utils::isinf(deg_freedom));
             return TCError::NewError<T>(deg_freedom, TCFuncId_CHISQ_INV_RT, TCArgPosition_2, TCError_IllegalInput);
         }
@@ -191,9 +191,9 @@ namespace Dist
         template <typename T>
         struct Traits
         {
-            // If degrees of freedom is larger than NormDistThreshold, the PDF
-            // calls the normal distribution PDF instead of the using the
-            // chi-square PDF formulation.
+            
+            
+            
             static T NormDistThreshold()
             {
                 return static_cast<T>(0);

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -20,4 +20,4 @@ struct median_dev_dist_t : public median_dev_t<T>, public Sort::operator_temp_co
 };
 
 
-} /* namespace Descriptive */ 
+}  

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -54,8 +54,8 @@ namespace Inference
         TCTypeTag tag = TCDistArray_Get_TypeTag(*sample);
 
         res = math_sort_dist<T>(sample, true, 1, sample);
-        // Assumption: sort result is the same on each node.
-        // We use collective operations below, so we need to exit synchronously.
+        
+        
         if (res != resOK)
         {
             return res;
@@ -71,7 +71,7 @@ namespace Inference
         {
             res = TCArray_New_ND(tag, ndims, shape, false, &localArray);
         }
-        // We use collective operations below, so we need to exit synchronously.
+        
         MPI_Bcast(&res, 1, MPI_UNSIGNED_SHORT, master, comm);
         if (res != resOK)
         {
@@ -79,8 +79,8 @@ namespace Inference
         }
 
         res = TCDistArray_Gather(sample, master, localArray);
-        // Assumption: TCDistArray_Gather result is the same on each node.
-        // We use collective operations below, so we need to exit synchronously.
+        
+        
         if (res != resOK)
         {
             if (rank == master)
@@ -103,7 +103,7 @@ namespace Inference
                 res = stats_inference_ks_test<T>(data, n, test, p_value, test_statistic);
             }
         }
-        // We use collective operations below, so we need to exit synchronously.
+        
         MPI_Bcast(&res, 1, MPI_UNSIGNED_SHORT, master, comm);
         if (res != resOK)
         {
@@ -114,7 +114,7 @@ namespace Inference
             return res;
         }
 
-        // Assumption: function result must be the same on all ranks.
+        
         MPI_Bcast(p_value, 1, mpi_traits<T>::mpi_type(), master, comm);
         MPI_Bcast(test_statistic, 1, mpi_traits<T>::mpi_type(), master, comm);
 

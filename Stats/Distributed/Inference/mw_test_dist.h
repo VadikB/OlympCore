@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -105,7 +105,7 @@ namespace Inference
                 }
             }
         }
-        // We use collective operations below, so we need to exit synchronously.
+        
         MPI_Bcast(&res, 1, MPI_UNSIGNED_SHORT, master, comm);
         if (res != resOK)
         {
@@ -113,8 +113,8 @@ namespace Inference
         }
 
         res = TCDistArray_Gather(sample1, master, localArray1);
-        // Assumption: TCDistArray_Gather result is the same on each node.
-        // We use collective operations below, so we need to exit synchronously.
+        
+        
         if (res != resOK)
         {
             if (rank == master)
@@ -157,7 +157,7 @@ namespace Inference
                 }
             }
         }
-        // We use collective operations below, so we need to exit synchronously.
+        
         MPI_Bcast(&res, 1, MPI_UNSIGNED_SHORT, master, comm);
         if (res != resOK)
         {
@@ -169,7 +169,7 @@ namespace Inference
             return res;
         }
 
-        // Assumption: function result must be the same on all ranks.
+        
         MPI_Bcast(p_value, 1, mpi_traits<T>::mpi_type(), master, comm);
         MPI_Bcast(u_statistic, 1, mpi_traits<T>::mpi_type(), master, comm);
 

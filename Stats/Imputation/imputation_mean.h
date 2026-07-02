@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -60,7 +60,7 @@ namespace Imputation
         TCSize_t stride;
         
         *not_replaced = 0;
-        // empty array
+        
         if (num == 0)
         {
             return TCError_NoError; 
@@ -70,7 +70,7 @@ namespace Imputation
         {
         case 1:
             {
-                // run average
+                
                 err_code = Descriptive::stats_redall_average<T>(data_in, 1, &column_mean);
                 if (TCError::IsMissing<T>(&column_mean))
                 {
@@ -84,7 +84,7 @@ namespace Imputation
             break;
         case 2:
             {
-                // allocate TCArray
+                
                 TCArray* column_means; 
                 numrows = data_in->m_dims[0];
                 numcols = data_in->m_dims[1];
@@ -98,7 +98,7 @@ namespace Imputation
 
                 Descriptive::stats_reddim_average<T>(data_in, 1, column_means);
 
-                // column-wise imputation
+                
                 stride = (TCSize_t)data_in->m_strides[1];
                 for (TCSize_t ncol = 0; ncol < numcols; ++ncol)
                 {
@@ -127,4 +127,4 @@ namespace Imputation
         *not_replaced = count;
         return err_code;
     }; 
-} // namespace Imputation
+} 

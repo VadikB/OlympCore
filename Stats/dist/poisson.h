@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -19,11 +19,11 @@ namespace Dist
             T result = 0;
             T logresult = 0;
     
-            //both x and mean must be numbers
+            
             BAIL_ON_NAN(x, result);
             BAIL_ON_NAN(mean, result);
 
-            //mean must be non-negative and finite
+            
             if (mean < 0 || Utils::isinf(mean))
             {
                 result = TCError::NewError<T>(mean,  TCFuncId_POISSON_DIST, TCArgPosition_2, TCError_IllegalInput);
@@ -46,9 +46,9 @@ namespace Dist
                 }
                 else
                 {
-                    //the initial value at x = 0
+                    
                     result = Utils::exp(-mean); 
-                    if (result != 0)        //lambda is not too large
+                    if (result != 0)        
                     {
                         for (T idx = 1; idx <= x; idx++)
                         {
@@ -60,10 +60,10 @@ namespace Dist
                         }
                     }
 
-                    else                 //lambda is too large
+                    else                 
                     {
                         T gammaln_val = Utils::gammaln(x + 1);
-                        if (Utils::isinf(gammaln_val))  //if gammaln_val is inf, it means x is super large. Use norm approximation
+                        if (Utils::isinf(gammaln_val))  
                         {
                             T norm_mean = mean;
                             T norm_sigma = sqrt(mean);                            
@@ -89,11 +89,11 @@ namespace Dist
             T result = 0;
             T x_truncated = 0;
     
-            //both x and mean must be numbers
+            
             BAIL_ON_NAN(x, result);
             BAIL_ON_NAN(mean, result);
 
-            //mean must be non-negative and finite
+            
             if (mean < 0 || Utils::isinf(mean))
             {
                 result = TCError::NewError<T>(mean,  TCFuncId_POISSON_DIST, TCArgPosition_2, TCError_IllegalInput);
@@ -127,35 +127,35 @@ namespace Dist
             T result = 0;
             T lower = 0;
             T upper = 1;
-            const TCSize_t MAX_ITERATION_NUMBER = 1200; //using bisection, the maximum iteration number should be less than log2(10e+308)
+            const TCSize_t MAX_ITERATION_NUMBER = 1200; 
             TCSize_t iteration = 0;
 
-            //both probability and mean must be numbers
+            
             BAIL_ON_NAN(probability, result);
             BAIL_ON_NAN(mean, result);
 
-            //mean must be non-negative and finite
+            
             if (mean < 0 || Utils::isinf(mean))
             {
                 result = TCError::NewError<T>(mean,  TCFuncId_POISSON_INV, TCArgPosition_2, TCError_IllegalInput);
                 BAIL();
             }
 
-            //probability must be between 0 and 1
+            
             if (probability < 0 || probability > 1)
             {
                 result = TCError::NewError<T>(probability,  TCFuncId_POISSON_INV, TCArgPosition_1, TCError_IllegalInput);
                 BAIL();
             }
 
-            //special handling for mean == 0
+            
             if (0 == mean)
             {
                 result = 0;
                 BAIL();
             }
 
-            //special handling for probability = 1
+            
             if (1 == probability)
             {
                 assert ( 0 != mean);
@@ -163,7 +163,7 @@ namespace Dist
                 BAIL();
             }
 #if 0
-                //test point for gamma function
+                
                 result = (T) Utils::gamma_regularized_q(2.8362596673541700e+278, 4.4942328371557894e+306);
 #endif
 
@@ -176,7 +176,7 @@ namespace Dist
             lower = 0;
             upper = 1;
 
-            //While ( cdf (upper) < prob and upper is not inf), increase lower/upepr until cdf(lower) < prob <= cdf (upper), or upper becomes inf
+            
             do 
             {
                 T cdf_upper = CDF(upper, mean);
@@ -186,13 +186,13 @@ namespace Dist
                 {
                     break;
                 }
-                //guarantee contuinuity and cover the real axis
+                
                 lower = upper;
                 upper = 2* lower +1;
             } 
             while (Utils::isinf(upper) == false);
 
-            //If upper is inf  { set result to inf and return;}
+            
             if (Utils::isinf(upper))
             {
                 result = Utils::infinity<T>();

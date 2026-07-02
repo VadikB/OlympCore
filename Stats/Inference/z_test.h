@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -67,7 +67,7 @@ struct ZTestFinal
                 Workset::in_t sqrtN = Utils::sqrt((Workset::in_t)ws.Count(ind));
                 Workset::in_t zscore = sqrtN * (ws.Param0Element(ind) - ws.Mean0()) / (ws.Param1Element(ind));
 
-                // complement of normal distribution
+                
                 ws.Param2Element(ind) = Utils::erfc(zscore / Utils::sqrt(static_cast<Workset::in_t>(2))) / (static_cast<Workset::in_t>(2));
             }
         }
@@ -159,7 +159,7 @@ struct ZTestStdFinal
                 Workset::in_t sqrtN = Utils::sqrt((Workset::in_t)ws.Count(ind));
                 Workset::in_t zscore = sqrtN * (ws.Param0Element(ind) - ws.Mean0()) / ws.STD();
 
-                // complement of normal distribution
+                
                 ws.Param1Element(ind) = Utils::erfc(zscore / Utils::sqrt(static_cast<Workset::in_t>(2))) / (static_cast<Workset::in_t>(2));
             }
         }

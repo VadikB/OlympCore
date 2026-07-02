@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -17,11 +17,11 @@ namespace Dist
         {
             T result = 0;
     
-            //both x and success_probability must be numbers
+            
             BAIL_ON_NAN(x, result);
             BAIL_ON_NAN(success_probability, result);
 
-            //success_probability must be between 0 and 1
+            
             if (success_probability < 0 || success_probability > 1)
             {
                 result = TCError::NewError<T>(success_probability,  TCFuncId_BERNOULLI_DIST, TCArgPosition_2, TCError_IllegalInput);
@@ -50,11 +50,11 @@ namespace Dist
         {
             T result = 0;
 
-            //both x and success_probability must be numbers
+            
             BAIL_ON_NAN(x, result);
             BAIL_ON_NAN(success_probability, result);
 
-            //success_probability must be between 0 and 1
+            
             if (success_probability < 0 || success_probability > 1)
             {
                 result = TCError::NewError<T>(success_probability,  TCFuncId_BERNOULLI_DIST, TCArgPosition_2, TCError_IllegalInput);
@@ -83,18 +83,18 @@ namespace Dist
         {
             T result = 0;
 
-            //both probability and success_probability must be numbers
+            
             BAIL_ON_NAN(probability, result);
             BAIL_ON_NAN(success_probability, result);
 
-            //success_probability must be between 0 and 1
+            
             if (success_probability < 0 || success_probability > 1)
             {
                 result = TCError::NewError<T>(success_probability,  TCFuncId_BERNOULLI_INV, TCArgPosition_2, TCError_IllegalInput);
                 BAIL();
             }
 
-            //probability must be between 0 and 1
+            
             if (probability < 0 || probability > 1)
             {
                 result = TCError::NewError<T>(probability,  TCFuncId_BERNOULLI_INV, TCArgPosition_1, TCError_IllegalInput);

@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -54,7 +54,7 @@ namespace Smoothing {
 
 		if (!dim_analysis(data_series, &data_length, &v_count)) 
 		{
-			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(EmaDataSeriesArg)); //Error when shape is illegal
+			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(EmaDataSeriesArg)); 
 		} 
 
 		T alpha, beta;
@@ -75,7 +75,7 @@ namespace Smoothing {
 		const T* data = (T*)data_series->m_data;
 		T* ema_data = (T*) ema_series->m_data;
 		
-		//cycle through columns
+		
 		for (TCSize_t v = 0; v < v_count; v++)
 		{
 			const T* begin = data + v * data_length;
@@ -85,10 +85,10 @@ namespace Smoothing {
 			T* end_ema = begin_ema + data_length;
 			T* ema = begin_ema;
 
-			//If EMAprev is not defined then EMA1=X1, else EMA1=EMAprev
+			
 			*ema =  externalValueType == MissingValue ? *begin : external_ema_last_value;
 
-			//process data in a single column
+			
 			for (auto p = begin + 1; p != end; )
 			{
 				ValueType type = value_type(*p);
@@ -101,7 +101,7 @@ namespace Smoothing {
 					*++ema = next_value;
 					break;
 				case MissingValue:
-					//All EMA results become NaN
+					
 					std::fill(begin_ema, end_ema, _get_tc_error<T>(TCError_IllegalInput));
 					p = end;
 					break;

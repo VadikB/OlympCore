@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -205,4 +205,4 @@ namespace Inference
             return tcerror_code_new(TCError_Internal, TC_UNSPECIFIED_ARGID);
         }
     }
-} // Inference
+} 

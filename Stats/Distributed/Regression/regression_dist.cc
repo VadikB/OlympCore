@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 #include "TCReduceDist.h"
 #include "OlympCoreDist.h"
 #include "regression_dist.h"
@@ -45,8 +45,8 @@ MPI_Datatype GetType(TCDistArray *known_xs)
     return TC_ERROR;
 }
 
-//this function reshapes known_xs to be the same same shape as known_ys
-//otherwise data which are used for computations are not alligned
+
+
 template<typename T>
 TCErrorID reshape(TCDistArray *known_xs, TCDistArray *known_ys, TCDistArray *known_zs, std::vector<T> &tmpMem, TCSize_t rank)
 {
@@ -161,8 +161,8 @@ TCSize_t number(TCFComplex num)
     return (TCSize_t)num._real;
 }
 
-//template<typename T>
-//TCErrorID reshape(TCDistArray *known_xs, TCDistArray *known_ys, TCDistArray *known_zs, std::vector<T> &tmpMem, TCSize_t rank)
+
+
 
 template
 TCErrorID reshape<TCDouble>(TCDistArray *known_xs, TCDistArray *known_ys, TCDistArray *known_zs, std::vector<TCDouble> &tmpMem, TCSize_t rank);

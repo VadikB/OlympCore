@@ -1,17 +1,17 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #include "stdafx.h"
 
 template <typename T>
 static T stats_data_standardize(const T x, const T mean, const T standard_dev)
 {
-    // Compute for valid inputs
-    if (standard_dev > 0 && !Utils::isinf(mean) && !Utils::isinf(standard_dev)) // propagate x == NaN
+    
+    if (standard_dev > 0 && !Utils::isinf(mean) && !Utils::isinf(standard_dev)) 
     {
         T result = (x - mean)/standard_dev;
-        // Alternative formulation to deal with spurious infinities
+        
         if (Utils::isinf(result))
         {
             T betterResult = x / standard_dev - mean / standard_dev;
@@ -23,12 +23,12 @@ static T stats_data_standardize(const T x, const T mean, const T standard_dev)
         return result;
     }
 
-    // Check for nan inputs
+    
     if (Utils::isnan(mean))         return mean;
     if (Utils::isnan(standard_dev)) return standard_dev;
     if (Utils::isnan(x))            return x;
 
-    // Check of out-of-domain inputs
+    
     if (Utils::isinf(mean))
     {
         return TCError::NewError<T>(mean,  TCFuncId_STANDARDIZE, TCArgPosition_2, TCError_IllegalInput);

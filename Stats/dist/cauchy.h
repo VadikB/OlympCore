@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -31,7 +31,7 @@ namespace Dist
 
             T z = (x - location) / scale;
             
-            //return (T)(M_1_PI / (scale * ((T)1.0 + z * z)));
+            
             T ret = (T)1.0 / (T)Utils::pi() / (scale * ((T)1.0 + z * z));
 
             if (ret == 0)
@@ -60,12 +60,12 @@ namespace Dist
             T z = (x - location) / scale;
             if (z < 0)
             {
-                //return (T)-M_1_PI * Utils::atan(1 / z);
+                
                 return (T)(-1.0) / (T)Utils::pi() * Utils::atan(1 / z);
             }
             else
             {
-                //return (T)M_1_PI * Utils::atan(z) + (T).5;
+                
                 return (T)1.0 / (T)Utils::pi() * Utils::atan(z) + (T).5;
             }        
         }

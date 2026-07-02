@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -28,13 +28,13 @@ namespace Outliers
 
 		TCSize_t sample_size = sample->m_numelt;
 
-		//Input data size is less than method minimum requirement 	
+		
 		if ( sample_size < 3 )											
 		{			
 			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(1));
 		}
 
-		// method is not in {0,11,12,20,21,22}
+		
 		if ( method == 0 )
 		{
 			if ( sample_size < 8 )
@@ -85,15 +85,15 @@ namespace Outliers
 			sort(indexVector.begin(), indexVector.end(), checkingComp);
 		}
 		catch (...)
-		{	//Error NAN, ±Inf in the sample TCError_IllegalInput 			
+		{	
 			return tcerror_code_new(TCError_IllegalInput, TCArgumentID(1));	
 		}
 
 		ValidDataWrapper<T,TCSize_t>  validData(data, &indexVector.front(), sample_size); 
 		valid_data_count = validData.getValidDataCount();
 		
-		//Input data size after duplicates removed 
-		//is less than method minimum requirement TCError_IllegalSize 
+		
+		
 		if ( nextrems_tail + nextrems_diam + 2 > valid_data_count ) 
 		{
 			return tcerror_code_new(TCError_IllegalSize, TCArgumentID(1));

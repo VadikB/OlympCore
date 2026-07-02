@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -14,10 +14,10 @@ namespace Descriptive
     {
         static void Reduce(Workset& ws, const TCSize_t ind, typename const Workset::in_t in)
         {
-            Workset::in_t deviation = in - ws.Param0Element(ind); // x[i] - ave(x)
+            Workset::in_t deviation = in - ws.Param0Element(ind); 
             Workset::in_t deviationSq = deviation * deviation;
-            ws.Param1Element(ind) += deviationSq;                 // sum( (x[i] - ave(x)) ^ 2 )
-            ws.Param2Element(ind) += deviationSq * deviation;     // sum( (x[i] - ave(x)) ^ 3 )
+            ws.Param1Element(ind) += deviationSq;                 
+            ws.Param2Element(ind) += deviationSq * deviation;     
         }
     };
 
@@ -61,8 +61,8 @@ namespace Descriptive
             return tcerror_code_new(TCError_IllegalInput, TCArgumentID(1));
         }
 
-        // Skew requires the input array has length>=3 in the direction to be
-        // reduced. Othrwise, return a TCError_IllegalSize error.
+        
+        
         if (numbers->m_dims[dim-1] < 3)
         {
             return tcerror_code_new(TCError_IllegalSize, 1);
@@ -76,14 +76,14 @@ namespace Descriptive
     template <typename T>
     TCErrorCode stats_redall_skew(const TCArray* numbers, const TCSize_t narrays, T* skewness)
     {
-        //Compute the total number of elements
+        
         TCSize_t nTotalElem = 0;
         for (TCSize_t arrayId = 0; arrayId < narrays; arrayId ++)
         {
             nTotalElem += numbers[arrayId].m_numelt;
         }
 
-        // Skew requires the input array has length>=3. Othrwise, return a TCError_IllegalSize error.
+        
         if (nTotalElem < 3)
         {
             *skewness = TCError::NewErrorImpl<T>::run(tcerror_code_new(TCError_IllegalSize, 1));

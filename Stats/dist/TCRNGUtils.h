@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -52,7 +52,7 @@ private:
 public:
     static TCRNGStatePtr GetState()
     {
-        if (stream == NULL) //unsafe
+        if (stream == NULL) 
         {
             stream = CreateState();
         }

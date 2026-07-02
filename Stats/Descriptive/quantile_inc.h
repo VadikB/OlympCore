@@ -1,6 +1,6 @@
-//<copyright>
-// Copyright (c) Microsoft Corporation.  All rights reserved.
-//</copyright>
+
+
+
 
 #pragma once
 
@@ -36,16 +36,16 @@ struct quantile_inc_t : public Sort::operator_temp_copy_t<T>
             return err;
         }
         T* data = state.data();
-        // check for meta-numeric values
+        
         for (TCSize_t i = 0; i < nelem; i++ )
         {
             T v = data[i];
-            // don't allow qnans to qsel, missings already filtered in the outer loop
+            
             if(TCError::IsErrorImpl<T>::run(&v))
             {
                 for (TCSize_t j = 0; j <= q; j++)
                 {
-                    output[j*output_stride] = v; // propagate error
+                    output[j*output_stride] = v; 
                 }
                 return tcerror_code_new(TCError_NoError, TCArgPosition_UnKnown);
             }
