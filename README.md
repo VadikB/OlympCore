@@ -2,7 +2,7 @@
 
 This is a portable open-source starting point for the legacy `Stats` C/C++ methods.
 
-The original `Stats/` directory is kept intact. It still references the old Microsoft internal runtime headers (`TCTypes.h`, `TCArray.h`, `TCMath.h`, `TCReduce.h`, MKL wrappers, MPI pieces), so it cannot be rebuilt as-is from this folder alone.
+The remaining `Stats/` directory is kept as a reference-only archive for porting algorithms. Old Visual Studio project wrappers, Client/Server projects, distributed/MPI sources, precompiled-header scaffolding, resources, and build artifacts were removed. The remaining legacy method sources still reference the old Microsoft internal runtime headers (`TCTypes.h`, `TCArray.h`, `TCMath.h`, `TCReduce.h`, MKL wrappers), so they cannot be rebuilt as-is from this folder alone.
 
 The new `olympcore` layer provides a small dependency-free C++17 API that can be built on macOS, Linux, and Windows.
 
